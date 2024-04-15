@@ -10,37 +10,50 @@ public class App extends JFrame {
     private JTextField idField;
     private JTextField nameField;
     private JTextField stockField;
-    private JButton addButton;
-    private JButton removeButton;
-    private JButton editButton;
+    private JButton productBtn;
+    private JButton fournisseursBtn;
+    private JButton ventesBtn;
+    private JButton rapportsBtn;
 
     public App() {
         setTitle("Gestion des Stocks");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(2, 1));
-
-        JPanel infoPanel = new JPanel();
-        infoPanel.setLayout(new GridLayout(3, 2));
-
         JPanel buttonPanel = new JPanel();
 
-        // JLabel idLabel = new JLabel(" Product ID:");
-        // idField = new JTextField();
-        // JLabel nameLabel = new JLabel(" Product Name");
-        // nameField = new JTextField();
-        // JLabel stockLabel = new JLabel(" Product Age");
-        // stockField = new JTextField();
+        fournisseursBtn = new JButton("Fournisseurs"); // Bouton Page Fournisseurs
+        fournisseursBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Page fournisseurs");
+            }
+        });
 
-        // addButton = new JButton("Ajouter"); // Bouton Ajouter
-        // addButton.addActionListener(new ActionListener() {
-        // public void actionPerformed(ActionEvent e) {
-        // addUser();
-        // }
-        // });
+        productBtn = new JButton("Produits"); // Bouton Page Produits
+        productBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Page produits");
+            }
+        });
+        ventesBtn = new JButton("Ventes"); // Bouton Page ventes
+        ventesBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Page ventes");
+            }
+        });
+        rapportsBtn = new JButton("Rapports"); // Bouton Page Rapports
+        rapportsBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Page rapports");
+            }
+        });
 
+        buttonPanel.add(productBtn);
+        buttonPanel.add(fournisseursBtn);
+        buttonPanel.add(ventesBtn);
+        buttonPanel.add(rapportsBtn);
+
+        add(buttonPanel);
         // removeButton = new JButton("Supprimer"); // Bouton Supprimer
         // removeButton.addActionListener(new ActionListener() {
         // public void actionPerformed(ActionEvent e) {
@@ -67,8 +80,6 @@ public class App extends JFrame {
         // buttonPanel.add(addButton);
         // buttonPanel.add(removeButton);
         // buttonPanel.add(editButton);
-
-        add(panel);
     }
 
     private void addUser() { // Ajout Utilisateur
