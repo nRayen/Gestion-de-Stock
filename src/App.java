@@ -16,7 +16,7 @@ public class App extends JFrame {
 
     public App() {
         setTitle("Gestion des Stocks");
-        setSize(600, 200);
+        setSize(1000, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel panel = new JPanel();
