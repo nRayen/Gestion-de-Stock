@@ -7,5 +7,4 @@ public class pageFournisseurs extends JPanel {
     public pageFournisseurs() {
         add(new JLabel("Fournisseurs"));
     }
-
 }
