@@ -1,4 +1,4 @@
-package Application;
+package Pages;
 
 import javax.swing.*;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -7,6 +7,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
 import com.formdev.flatlaf.FlatLightLaf;
+
+import Components.exitButton;
 
 public class App extends JFrame {
 
@@ -22,10 +24,8 @@ public class App extends JFrame {
 
         // Page Quitter
         JPanel pageExit = new JPanel();
-
-        // Boutton Quitter
-        JButton exitButton = new JButton("QUITTER");
-        pageExit.add(exitButton);
+        pageExit.setLayout(new BorderLayout());
+        pageExit.add(new exitButton(), BorderLayout.CENTER);
 
         // Ajout des Pages au TabbedPane
         tabbedPane.addTab("Produits", new pageProduits());

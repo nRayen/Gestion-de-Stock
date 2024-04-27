@@ -1,4 +1,4 @@
-package Application;
+package Pages;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
