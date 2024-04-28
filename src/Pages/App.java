@@ -16,7 +16,7 @@ public class App extends JFrame {
 
         // Paramètres de l'application
         setTitle("Gestion des Stocks");
-        setSize(1000, 700);
+        setSize(1080, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Création du TabbedPane
@@ -174,6 +174,7 @@ public class App extends JFrame {
     // }
 
     public static void main(String[] args) {
+
         // UIManager.setLookAndFeel(new FlatLightLaf());
         try {
 
