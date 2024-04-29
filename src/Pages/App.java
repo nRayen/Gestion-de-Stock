@@ -1,177 +1,150 @@
 package Pages;
 
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.sql.*;
-import com.formdev.flatlaf.FlatLightLaf;
-
-import Components.exitButton;
+import Components.StyledButton;
+import Components.pageTitle;
 
 public class App extends JFrame {
+    JTextField loginEntry = new JTextField();
+    JPasswordField pswdEntry = new JPasswordField();
 
     public App() {
-
-        // Paramètres de l'application
         setTitle("Gestion des Stocks");
-        setSize(1080, 700);
+        setSize(500, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new GridLayout());
 
-        // Création du TabbedPane
-        JTabbedPane tabbedPane = new JTabbedPane();
+        JPanel content = new JPanel();
+        content.setLayout(new BorderLayout());
+        add(content);
 
-        // Page Quitter
-        JPanel pageExit = new JPanel();
-        pageExit.setLayout(new BorderLayout());
-        pageExit.add(new exitButton(), BorderLayout.CENTER);
+        // Titre de la page
+        pageTitle title = new pageTitle("Gestion de stock");
+        title.setBackground(new Color(61, 131, 197));
+        title.setForeground(new Color(221, 230, 237));
+        title.setHorizontalAlignment(SwingConstants.CENTER);
+        content.add(title, BorderLayout.NORTH);
 
-        // Ajout des Pages au TabbedPane
-        tabbedPane.addTab("Produits", new pageProduits());
-        tabbedPane.addTab("Fournisseurs", new pageFournisseurs());
-        tabbedPane.addTab("Ventes", new pageVentes());
-        tabbedPane.addTab("Rapports", new pageRapports());
-        tabbedPane.addTab("Quitter", pageExit);
-        add(tabbedPane);
+        // Entry area
+        Container connexionArea = new Container();
+        content.add(connexionArea, BorderLayout.CENTER);
+        connexionArea.setLayout(new GridBagLayout());
+        GridBagConstraints gdbc = new GridBagConstraints();
 
-        // removeButton = new JButton("Supprimer"); // Bouton Supprimer
-        // removeButton.addActionListener(new ActionListener() {
-        // public void actionPerformed(ActionEvent e) {
-        // removeUser();
-        // }
-        // });
+        JLabel loginLabel = new JLabel("Login");
+        loginLabel.setFont(new Font("Montserrat", Font.PLAIN, 25));
+        loginLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
-        // editButton = new JButton("Mettre à jour"); // Bouton Modifier
-        // editButton.addActionListener(new ActionListener() {
-        // public void actionPerformed(ActionEvent e) {
-        // editUser();
-        // }
-        // });
+        loginEntry.setFont(new Font("Montserrat", Font.PLAIN, 25));
+        loginEntry.setColumns(10);
 
-        // panel.add(infoPanel);
-        // panel.add(buttonPanel);
+        JLabel pswdLabel = new JLabel("Mot de passe");
+        pswdLabel.setFont(new Font("Montserrat", Font.PLAIN, 25));
+        pswdLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-        // infoPanel.add(idLabel);
-        // infoPanel.add(idField);
-        // infoPanel.add(nameLabel);
-        // infoPanel.add(nameField);
-        // infoPanel.add(stockLabel);
-        // infoPanel.add(stockField);
-        // buttonPanel.add(addButton);
-        // buttonPanel.add(removeButton);
-        // buttonPanel.add(editButton);
+        pswdEntry.setFont(new Font("Montserrat", Font.PLAIN, 25));
+        pswdEntry.setColumns(10);
+
+        gdbc.insets = new Insets(15, 15, 15, 15);
+        gdbc.gridx = 0;
+        connexionArea.add(loginLabel, gdbc);
+
+        gdbc.gridx = 1;
+        connexionArea.add(loginEntry, gdbc);
+
+        gdbc.gridy = 1;
+        gdbc.gridx = 0;
+        connexionArea.add(pswdLabel, gdbc);
+
+        gdbc.gridx = 1;
+        connexionArea.add(pswdEntry, gdbc);
+
+        // Button Area
+        StyledButton loginButton = new StyledButton("Connexion");
+        loginButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                checkLogins();
+            }
+        });
+
+        content.add(loginButton, BorderLayout.SOUTH);
+
     }
 
-    // private void addUser() { // Ajout Utilisateur
-    // try {
-    // // Connexion à la base de données
-    // Connection con =
-    // DriverManager.getConnection("jdbc:mysql://localhost:3306/testProjet", "root",
-    // "");
+    private void checkLogins() {
+        try {
+            // Connexion à la base de données
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/stock", "root", "");
 
-    // // Préparation de la requête SQL
-    // String query = "INSERT INTO user (user_id, user_name, user_age) VALUES (?, ?,
-    // ?)";
-    // PreparedStatement pstmt = con.prepareStatement(query);
+            // Préparation de la requête SQL
+            String query = "SELECT * FROM user WHERE username = ? AND password = ?";
 
-    // // Récupération des données saisies par l'utilisateur
-    // int id = Integer.parseInt(idField.getText());
-    // String name = nameField.getText();
-    // int age = Integer.parseInt(stockField.getText());
+            PreparedStatement pstmt = con.prepareStatement(query);
 
-    // // Remplissage des paramètres de la requête SQL
-    // pstmt.setInt(1, id);
-    // pstmt.setString(2, name);
-    // pstmt.setInt(3, age);
+            // Récupération des données saisies par l'utilisateur
+            String user = loginEntry.getText();
+            String pswd = String.valueOf(pswdEntry.getPassword());
 
-    // // Exécution de la requête SQL
-    // int rowsAffected = pstmt.executeUpdate();
+            // Remplissage des paramètres de la requête SQL
+            pstmt.setString(1, user);
+            pstmt.setString(2, pswd);
 
-    // // Fermeture de la connexion et du PreparedStatement
-    // pstmt.close();
-    // con.close();
+            // Exécution de la requête SQL
+            ResultSet rowsAffected = pstmt.executeQuery();
 
-    // // Affichage d'un message de succès
-    // JOptionPane.showMessageDialog(this, "Utilisateur ajouté avec succès!");
-    // } catch (SQLException ex) {
-    // ex.printStackTrace();
-    // JOptionPane.showMessageDialog(this, "Erreur lors de l'ajout de l'utilisateur:
-    // " + ex.getMessage());
-    // }
-    // }
+            while (rowsAffected.next()) {
+                String usernameString = rowsAffected.getString("username");
+                if (usernameString != null) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            Interface Interface = new Interface();
+                            Interface.setVisible(true);
 
-    // private void removeUser() { // Suppression Utilisateur
-    // try {
-    // // Connexion à la base de données
-    // Connection con =
-    // DriverManager.getConnection("jdbc:mysql://localhost:3306/customerdb", "root",
-    // "");
+                            dispose();
 
-    // // Préparation de la requête SQL
-    // String query = "DELETE from `user` WHERE `user_id` = (?)";
-    // PreparedStatement pstmt = con.prepareStatement(query);
+                        }
+                    });
+                }
+            }
 
-    // // Récupération des données saisies par l'utilisateur
-    // int id = Integer.parseInt(idField.getText());
+            // Fermeture de la connexion et du PreparedStatement
+            pstmt.close();
+            con.close();
 
-    // // Remplissage des paramètres de la requête SQL
-    // pstmt.setInt(1, id);
-
-    // // Exécution de la requête SQL
-    // int rowsAffected = pstmt.executeUpdate();
-
-    // // Fermeture de la connexion et du PreparedStatement
-    // pstmt.close();
-    // con.close();
-
-    // // Affichage d'un message de succès
-    // JOptionPane.showMessageDialog(this, "Utilisateur avec l'id " + id + " à été
-    // supprimé avec succès!");
-    // } catch (SQLException ex) {
-    // ex.printStackTrace();
-    // JOptionPane.showMessageDialog(this, "Erreur lors de la suppression de
-    // l'utilisateur: " + ex.getMessage());
-    // }
-    // }
-
-    // private void editUser() { // Modification Utilisateur
-    // try {
-    // // Connexion à la base de données
-    // Connection con =
-    // DriverManager.getConnection("jdbc:mysql://localhost:3306/customerdb", "root",
-    // "");
-
-    // // Préparation de la requête SQL
-    // String query = "UPDATE `user` SET user_name = (?), user_age = (?) WHERE
-    // user_id = (?)";
-    // PreparedStatement pstmt = con.prepareStatement(query);
-
-    // // Récupération des données saisies par l'utilisateur
-    // int id = Integer.parseInt(idField.getText());
-    // String name = nameField.getText();
-    // int age = Integer.parseInt(stockField.getText());
-
-    // // Remplissage des paramètres de la requête SQL
-    // pstmt.setString(1, name);
-    // pstmt.setInt(2, age);
-    // pstmt.setInt(3, id);
-
-    // // Exécution de la requête SQL
-    // int rowsAffected = pstmt.executeUpdate();
-
-    // // Fermeture de la connexion et du PreparedStatement
-    // pstmt.close();
-    // con.close();
-
-    // // Affichage d'un message de succès
-    // JOptionPane.showMessageDialog(this, "Utilisateur mis à jour avec succès!");
-    // } catch (SQLException ex) {
-    // ex.printStackTrace();
-    // JOptionPane.showMessageDialog(this, "Erreur lors de la modification de
-    // l'utilisateur: " + ex.getMessage());
-    // }
-    // }
+            // Affichage d'un message de succès
+            JOptionPane.showMessageDialog(this, "Bienvenue " + user);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Erreur lors de l'ajout de l'utilisateur: " + ex.getMessage());
+        }
+    }
 
     public static void main(String[] args) {
 
@@ -195,8 +168,8 @@ public class App extends JFrame {
             public void run() {
                 App Interface = new App();
                 Interface.setVisible(true);
-
             }
         });
     }
+
 }
