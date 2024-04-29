@@ -104,7 +104,7 @@ public class App extends JFrame {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/stock", "root", "");
 
             // Préparation de la requête SQL
-            String query = "SELECT * FROM user WHERE username = ? AND password = ?";
+            String query = "SELECT COUNT(*) AS count FROM user WHERE username = ? AND password = ?";
 
             PreparedStatement pstmt = con.prepareStatement(query);
 
@@ -117,18 +117,19 @@ public class App extends JFrame {
             pstmt.setString(2, pswd);
 
             // Exécution de la requête SQL
-            ResultSet rowsAffected = pstmt.executeQuery();
+            ResultSet rs = pstmt.executeQuery();
 
-            while (rowsAffected.next()) {
-                String usernameString = rowsAffected.getString("username");
-                if (usernameString != null) {
+            while (rs.next()) {
+                int count = rs.getInt("count");
+                if (count == 0) {
+                    JOptionPane.showMessageDialog(this, "Identifiants incorrects");
+                } else {
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
-                            Interface Interface = new Interface();
+                            Interface Interface = new Interface(); // Crée et ouvre l'application
                             Interface.setVisible(true);
 
-                            dispose();
-
+                            dispose(); // Ferme la fenêtre de connexion
                         }
                     });
                 }
@@ -137,9 +138,6 @@ public class App extends JFrame {
             // Fermeture de la connexion et du PreparedStatement
             pstmt.close();
             con.close();
-
-            // Affichage d'un message de succès
-            JOptionPane.showMessageDialog(this, "Bienvenue " + user);
         } catch (SQLException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Erreur lors de l'ajout de l'utilisateur: " + ex.getMessage());

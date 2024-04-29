@@ -4,9 +4,6 @@ import javax.swing.*;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import java.awt.*;
-import java.awt.event.*;
-import java.sql.*;
-import com.formdev.flatlaf.FlatLightLaf;
 
 import Components.exitButton;
 
