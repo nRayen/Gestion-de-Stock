@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -144,6 +145,8 @@ public class pageFournisseurs extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 if (isAnyRowSelected()) {
                     updateFournisseur();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Aucun élément sélectionné");
                 }
             }
         });
@@ -152,6 +155,8 @@ public class pageFournisseurs extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 if (isAnyRowSelected()) {
                     deleteFournisseur();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Aucun élément sélectionné");
                 }
             }
         });
