@@ -2,6 +2,7 @@ package Stock;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class Fournisseur {
 
@@ -12,8 +13,7 @@ public class Fournisseur {
     // private static ArrayList<Fournisseur> listeFournisseurs = new
     // ArrayList<Fournisseur>();
 
-    public Fournisseur(int id, String name, String country) {
-        this.id = id;
+    public Fournisseur(String name, String country) {
         this.name = name;
         this.country = country;
     }
@@ -33,7 +33,7 @@ public class Fournisseur {
     // }
 
     // Getters
-    public int getId() {
+    public long getId() {
         return this.id;
     }
 
