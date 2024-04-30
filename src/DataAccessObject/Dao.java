@@ -1,10 +1,11 @@
 package DataAccessObject;
 
 import java.util.List;
-import java.util.Optional;
+
+import Stock.Fournisseur;
 
 public interface Dao<T> {
-    Optional<T> get(int id);
+    Fournisseur get(int id);
 
     List<T> getAll();
 

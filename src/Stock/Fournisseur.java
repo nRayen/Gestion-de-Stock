@@ -33,7 +33,7 @@ public class Fournisseur {
     // }
 
     // Getters
-    public long getId() {
+    public int getId() {
         return this.id;
     }
 

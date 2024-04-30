@@ -1,31 +1,27 @@
 package Pages;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+
+import java.util.List;
 
 import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 
 import Components.StyledButton;
 import Components.pageTitle;
@@ -36,6 +32,8 @@ public class pageFournisseurs extends JPanel {
     FournisseurDAO fDAO = new FournisseurDAO();
     JTextField nameInput = new JTextField();
     JTextField countryInput = new JTextField();
+    JTable table;
+    DefaultTableModel tableModel;
 
     public pageFournisseurs() {
 
@@ -62,7 +60,44 @@ public class pageFournisseurs extends JPanel {
         fInfo.setLayout(new GridLayout(2, 1, 20, 20));
         content.add(fInfo, gbc);
 
-        // Panel Info à gauche
+        /////////////////////////////////////////////////////////////////////// Liste à
+        /////////////////////////////////////////////////////////////////////// droite
+
+        // Création du tableau
+        String columns[] = { "ID", "Name", "Country" };
+        tableModel = new DefaultTableModel(columns, 0) {
+            public boolean isCellEditable(int row, int column) {
+                return false; // Toujours retourner faux pour savoir si la cellule est modifiable
+            }
+        };
+        table = new JTable(tableModel);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.setColumnSelectionAllowed(false);
+
+        // Ecouteur d'évènements pour la sélection de ligne
+        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) { // Empêche l'écouteur d'éxécuter 2 fois
+                    if (!isAnyRowSelected()) {
+                        return;
+                    }
+                    getFournisseurInfo();
+                }
+            }
+        });
+
+        JScrollPane fList = new JScrollPane(table); // Ajouter la JTable à la JScrollPane
+        List<Fournisseur> data = fDAO.getAll();
+        for (Fournisseur fournisseur : data) {
+            Object[] f = { fournisseur.id, fournisseur.name, fournisseur.country };
+            tableModel.addRow(f);
+        }
+
+        gbc.gridx = 1;
+        content.add(fList, gbc);
+
+        /////////////////////////////////////////////////////////////////// Panel Info à
+        /////////////////////////////////////////////////////////////////// gauche
         fInfo.setBorder(new EmptyBorder(50, 50, 50, 50));
         JPanel inputArea = new JPanel();
         fInfo.add(inputArea);
@@ -101,62 +136,76 @@ public class pageFournisseurs extends JPanel {
 
         addButton.addActionListener(new ActionListener() { // Bouton ajouter fournisseur
             public void actionPerformed(ActionEvent e) {
-                String name = nameInput.getText();
-                String country = countryInput.getText();
-                Fournisseur fournisseur = new Fournisseur(name, country);
-                fDAO.save(fournisseur);
+                addFournisseur();
             }
         });
 
-        //////////////////////////////////////////////////////////////////////////////////// Liste
-        //////////////////////////////////////////////////////////////////////////////////// à
-        //////////////////////////////////////////////////////////////////////////////////// droite
+        updateButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (isAnyRowSelected()) {
+                    updateFournisseur();
+                }
+            }
+        });
 
-        fetchData(); // Récupère les fournisseurs depuis la base de donnée
-
-        String[] data = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6",
-                "Item 7", "Item 8", "Item 9",
-                "Item 10" };
-
-        // Object[] data = fDAO.getAll().toArray();
-
-        JList<String> liste = new JList<>(data);
-        JScrollPane fList = new JScrollPane(liste);
-
-        gbc.gridx = 1;
-        content.add(fList, gbc);
-
+        removeButton.addActionListener(new ActionListener() { // Bouton supprimer fournisseur
+            public void actionPerformed(ActionEvent e) {
+                if (isAnyRowSelected()) {
+                    deleteFournisseur();
+                }
+            }
+        });
     }
 
-    public void fetchData() {
-        try {
-            // Connexion à la base de données
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/stock", "root", "");
+    ///////////////////////////////////////////////////////////////////////////////// Fonctions
+    private void addFournisseur() {
+        String name = nameInput.getText();
+        String country = countryInput.getText();
+        Fournisseur fournisseur = new Fournisseur(name, country);
+        fDAO.save(fournisseur);
+        Object[] f = { fournisseur.id, fournisseur.name, fournisseur.country };
+        tableModel.addRow(f);
+        clearInputs();
 
-            // Préparation de la requête SQL
-            String query = "SELECT * FROM fournisseur";
+        // Modfiier dans la BDD
+    }
 
-            Statement stmt = con.prepareStatement(query);
+    private void deleteFournisseur() {
+        int row = table.getSelectedRow();
+        int id = Integer.parseInt(table.getModel().getValueAt(row, 0).toString());
+        tableModel.removeRow(row);
+        clearInputs();
 
-            // Exécution de la requête SQL
-            ResultSet rs = stmt.executeQuery(query);
+        // Modifier dans la BDD
+        fDAO.delete(fDAO.get(id));
+    }
 
-            // Traitement du résultat
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String name = rs.getString("name");
-                String country = rs.getString("country");
+    private void updateFournisseur() {
+        String[] param = { nameInput.getText(), countryInput.getText() };
+        int row = table.getSelectedRow();
+        int id = Integer.parseInt(table.getModel().getValueAt(row, 0).toString());
 
-                Fournisseur f = new Fournisseur(name, country);
-                f.id = id;
-            }
+        tableModel.setValueAt(param[0], row, 1);
+        tableModel.setValueAt(param[1], row, 2);
 
-            // Fermeture de la connexion et du Statement
-            stmt.close();
-            con.close();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Erreur lors de la récupération des données " + ex.getMessage());
-        }
+        // Modifier dans la BDD
+        fDAO.update(fDAO.get(id), param);
+    }
+
+    private void getFournisseurInfo() {
+        int row = table.getSelectedRow();
+        int id = Integer.parseInt(table.getModel().getValueAt(row, 0).toString());
+        Fournisseur selected = fDAO.get(id);
+        nameInput.setText(selected.getName());
+        countryInput.setText(selected.getCountry());
+    }
+
+    private boolean isAnyRowSelected() {
+        return !table.getSelectionModel().isSelectionEmpty();
+    }
+
+    private void clearInputs() {
+        nameInput.setText("");
+        countryInput.setText("");
     }
 }
