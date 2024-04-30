@@ -3,7 +3,6 @@ package Pages;
 import java.awt.BorderLayout;
 import java.awt.Container;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import Components.pageTitle;
