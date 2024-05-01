@@ -233,7 +233,7 @@ public class pageProduits extends JPanel {
         nameInput.setText(selected.getName());
         priceInput.setText(Float.toString(selected.getPrice()));
         quantitéInput.setText(Integer.toString(selected.getQuantité()));
-        fournisseurSelector.setSelectedItem(selected.getIDFournisseur());
+        fournisseurSelector.setSelectedItem(fDao.get(selected.getIDFournisseur()));
     }
 
     private boolean isAnyRowSelected() {
