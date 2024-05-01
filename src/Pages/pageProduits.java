@@ -223,7 +223,13 @@ public class pageProduits extends JPanel {
     }
 
     private void deleteProduit() {
+        int row = table.getSelectedRow();
+        int id = Integer.parseInt(table.getModel().getValueAt(row, 0).toString());
+        tableModel.removeRow(row);
+        clearInputs();
 
+        // Modifier dans la BDD
+        pDAO.delete(pDAO.get(id));
     }
 
     private void getProduitInfo() {
