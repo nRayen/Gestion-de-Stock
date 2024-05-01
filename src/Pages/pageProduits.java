@@ -5,18 +5,24 @@ import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
+import Components.InputField;
+import Components.InputLabel;
+import Components.StyledButton;
 import Components.pageTitle;
 import DataAccessObject.ProduitDAO;
 import Stock.Fournisseur;
@@ -26,9 +32,9 @@ public class pageProduits extends JPanel {
 
     ProduitDAO pDAO = new ProduitDAO();
 
-    JTextField nameInput = new JTextField();
-    JTextField priceInput = new JTextField();
-    JTextField quantitéInput = new JTextField();
+    InputField nameInput = new InputField();
+    InputField priceInput = new InputField();
+    InputField quantitéInput = new InputField();
     JComboBox<Fournisseur> fournisseurInput = new JComboBox<>();
 
     JTable table;
@@ -51,12 +57,12 @@ public class pageProduits extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.weightx = 0.5;
-        gbc.weighty = 0.5;
+        gbc.weightx = 0.2;
+        gbc.weighty = 0.2;
         gbc.fill = GridBagConstraints.BOTH;
 
         JPanel pInfo = new JPanel();
-        pInfo.setLayout(new GridLayout(2, 1, 20, 20));
+        pInfo.setLayout(new GridLayout(2, 1));
         content.add(pInfo, gbc);
 
         /////////////////////////////////////////////////////////////// Liste à droite
@@ -97,10 +103,90 @@ public class pageProduits extends JPanel {
         }
 
         gbc.gridx = 1;
+        gbc.weightx = 0.8;
+        gbc.weighty = 0.8;
         content.add(fList, gbc);
+
+        ////////////////////////////////////////////////////////////////////// Panel
+        ////////////////////////////////////////////////////////////////////// Info à
+        ////////////////////////////////////////////////////////////////////// gauche
+
+        pInfo.setBorder(new EmptyBorder(50, 10, 10, 10));
+        JPanel inputArea = new JPanel();
+        // inputArea.setBackground(Color.BLACK);
+        // inputArea.setPreferredSize(new Dimension(500, 500));
+        pInfo.add(inputArea);
+
+        inputArea.setLayout(new GridLayout(4, 1, 100, 50));
+
+        InputLabel nameLabel = new InputLabel("Nom");
+        InputLabel priceLabel = new InputLabel("Prix");
+        InputLabel quantitéLabel = new InputLabel("Quantité");
+        InputLabel fournisseurLabel = new InputLabel("Fournisseur");
+
+        inputArea.add(nameLabel);
+        inputArea.add(nameInput);
+        inputArea.add(priceLabel);
+        inputArea.add(priceInput);
+        inputArea.add(quantitéLabel);
+        inputArea.add(quantitéInput);
+        inputArea.add(fournisseurLabel);
+        inputArea.add(fournisseurInput);
+
+        // Button Area
+
+        JPanel buttonArea = new JPanel();
+        pInfo.add(buttonArea);
+        buttonArea.setBorder(new EmptyBorder(50, 0, 50, 0));
+
+        StyledButton addButton = new StyledButton("Ajouter");
+        StyledButton updateButton = new StyledButton("Mettre à jour");
+        StyledButton removeButton = new StyledButton("Supprimer");
+
+        buttonArea.add(addButton);
+        buttonArea.add(updateButton);
+        buttonArea.add(removeButton);
+
+        addButton.addActionListener(new ActionListener() { // Bouton ajouter produit
+            public void actionPerformed(ActionEvent e) {
+                addProduit();
+            }
+        });
+
+        updateButton.addActionListener(new ActionListener() { // Bouton mise a jour produit
+            public void actionPerformed(ActionEvent e) {
+                if (isAnyRowSelected()) {
+                    updateProduit();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Aucun élément sélectionné");
+                }
+            }
+        });
+
+        removeButton.addActionListener(new ActionListener() { // Bouton supprimer produit
+            public void actionPerformed(ActionEvent e) {
+                if (isAnyRowSelected()) {
+                    deleteProduit();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Aucun élément sélectionné");
+                }
+            }
+        });
     }
 
     // Fonctions
+
+    private void addProduit() {
+
+    }
+
+    private void updateProduit() {
+
+    }
+
+    private void deleteProduit() {
+
+    }
 
     private void getProduitInfo() {
         int row = table.getSelectedRow();
