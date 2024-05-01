@@ -50,8 +50,8 @@ public class FournisseurDAO implements Dao<Fournisseur> {
             PreparedStatement pstmt = con.prepareStatement(query);
 
             // Remplissage des paramètres de la requête SQL
-            pstmt.setString(1, fournisseur.name);
-            pstmt.setString(2, fournisseur.country);
+            pstmt.setString(1, fournisseur.getName());
+            pstmt.setString(2, fournisseur.getCountry());
 
             // Exécution de la requête SQL
             pstmt.executeUpdate();
@@ -60,12 +60,12 @@ public class FournisseurDAO implements Dao<Fournisseur> {
             // Récupérer ID attribué
             query = "SELECT id FROM fournisseur WHERE name = ? AND country = ?";
             PreparedStatement pstmt2 = con.prepareStatement(query);
-            pstmt2.setString(1, fournisseur.name);
-            pstmt2.setString(2, fournisseur.country);
+            pstmt2.setString(1, fournisseur.getName());
+            pstmt2.setString(2, fournisseur.getCountry());
             ResultSet rs2 = pstmt2.executeQuery();
             while (rs2.next()) {
                 int id = rs2.getInt("id");
-                fournisseur.id = id;
+                fournisseur.setId(id);
                 break;
             }
 
@@ -81,8 +81,6 @@ public class FournisseurDAO implements Dao<Fournisseur> {
         }
 
         fournisseurs.add(fournisseur);
-        System.err.println(fournisseur.id);
-        System.err.println(fournisseurs.size());
     }
 
     @Override
@@ -173,7 +171,7 @@ public class FournisseurDAO implements Dao<Fournisseur> {
                 String country = rs.getString("country");
 
                 Fournisseur f = new Fournisseur(name, country);
-                f.id = id;
+                f.setId(id);
                 fournisseurs.add(f);
             }
 
