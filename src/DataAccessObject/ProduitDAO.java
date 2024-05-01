@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -155,6 +156,41 @@ public class ProduitDAO implements Dao<Produit> {
         }
 
         listeProduits.remove(produit);
+    }
+
+    public void fetchData() {
+        try {
+            // Connexion à la base de données
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/stock", "root", "");
+
+            // Préparation de la requête SQL
+            String query = "SELECT * FROM produit";
+
+            Statement stmt = con.prepareStatement(query);
+
+            // Exécution de la requête SQL
+            ResultSet rs = stmt.executeQuery(query);
+
+            // Traitement du résultat
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                float price = rs.getFloat("price");
+                int quantité = rs.getInt("quantité");
+                int idFournisseur = rs.getInt("id_fournisseur");
+
+                Produit p = new Produit(name, price, quantité, idFournisseur);
+                p.id = id;
+                listeProduits.add(p);
+            }
+
+            // Fermeture de la connexion et du Statement
+            stmt.close();
+            con.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Erreur lors de l'ajout de l'utilisateur: " + ex.getMessage());
+        }
     }
 
 }
