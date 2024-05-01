@@ -58,12 +58,12 @@ public class ProduitDAO implements Dao<Produit> {
             pstmt.close();
 
             // Récupérer ID attribué
-            query = "SELECT id FROM produit WHERE name = ? AND price = ? AND quantité = ? AND id_fournisseur = ?";
+            query = "SELECT id FROM produit WHERE name = ? AND quantité = ? AND id_fournisseur = ?";
             PreparedStatement pstmt2 = con.prepareStatement(query);
             pstmt2.setString(1, produit.getName());
-            pstmt2.setFloat(2, produit.getPrice());
-            pstmt2.setInt(3, produit.getQuantité());
-            pstmt2.setInt(4, produit.getIDFournisseur());
+            pstmt2.setInt(2, produit.getQuantité());
+            pstmt2.setInt(3, produit.getIDFournisseur());
+            System.err.println(produit.getPrice());
             ResultSet rs2 = pstmt2.executeQuery();
 
             List<Integer> possibleIDs = new ArrayList<>();

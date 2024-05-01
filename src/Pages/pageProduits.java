@@ -103,7 +103,7 @@ public class pageProduits extends JPanel {
             Float price = produit.getPrice();
             int quantité = produit.getQuantité();
             int idFournisseur = produit.getIDFournisseur();
-            Object[] p = { id, name, price, quantité, idFournisseur };
+            Object[] p = { id, name, price, quantité, fDao.get(idFournisseur).getName() };
             tableModel.addRow(p);
         }
 
@@ -211,15 +211,28 @@ public class pageProduits extends JPanel {
                 produit.getQuantité(),
                 produit.getIDFournisseur(),
         };
-        System.out.println(name);
-        System.out.println(price);
-        System.out.println(quantité);
-        System.out.println(idFournisseur);
+        p[4] = fDao.get(produit.getIDFournisseur()).getName();
         tableModel.addRow(p);
         clearInputs();
     }
 
     private void updateProduit() {
+        Fournisseur fournisseur = (Fournisseur) fournisseurSelector.getSelectedItem();
+        String idFournisseur = Integer.toString(fournisseur.getId());
+        String[] param = {
+                nameInput.getText(),
+                priceInput.getText(),
+                quantitéInput.getText(),
+                idFournisseur,
+        };
+        int row = table.getSelectedRow();
+        int id = Integer.parseInt(table.getModel().getValueAt(row, 0).toString());
+
+        tableModel.setValueAt(param[0], row, 1);
+        tableModel.setValueAt(param[1], row, 2);
+
+        // Modifier dans la BDD
+        pDAO.update(pDAO.get(id), param);
     }
 
     private void deleteProduit() {
