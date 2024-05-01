@@ -18,7 +18,7 @@ public class ProduitDAO implements Dao<Produit> {
     public ProduitDAO() {
     }
 
-    private List<Produit> listeProduits = new ArrayList<>();
+    public static List<Produit> listeProduits = new ArrayList<>();
 
     @Override
     public Produit get(int id) {
@@ -29,7 +29,6 @@ public class ProduitDAO implements Dao<Produit> {
             }
         }
         return listeProduits.get((int) index);
-
     }
 
     @Override
@@ -158,9 +157,10 @@ public class ProduitDAO implements Dao<Produit> {
         listeProduits.remove(produit);
     }
 
-    public void fetchData() {
+    public static void fetchData() {
         try {
             // Connexion à la base de données
+            listeProduits.clear();
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/stock", "root", "");
 
             // Préparation de la requête SQL

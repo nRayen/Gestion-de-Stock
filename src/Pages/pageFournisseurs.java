@@ -36,8 +36,6 @@ public class pageFournisseurs extends JPanel {
 
     public pageFournisseurs() {
 
-        fDAO.fetchData();
-
         // Layout de base
         setLayout(new BorderLayout());
         add(new pageTitle("Fournisseurs"), BorderLayout.NORTH);

@@ -2,14 +2,22 @@ package Pages;
 
 import javax.swing.*;
 import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import java.awt.*;
 
 import Components.exitButton;
+import DataAccessObject.FournisseurDAO;
+import DataAccessObject.ProduitDAO;
 
 public class Interface extends JFrame {
 
+    ProduitDAO pDAO = new ProduitDAO();
+    FournisseurDAO fDao = new FournisseurDAO();
+
     public Interface() {
+        fetchAllData(); // Récupérer toute les données de la BDD
 
         // Paramètres de l'application
         setTitle("Gestion des Stocks");
@@ -25,12 +33,27 @@ public class Interface extends JFrame {
         pageExit.add(new exitButton(), BorderLayout.CENTER);
 
         // Ajout des Pages au TabbedPane
-        tabbedPane.addTab("Produits", new pageProduits());
+        pageProduits pageProduits = new pageProduits();
+        tabbedPane.addTab("Produits", pageProduits);
         tabbedPane.addTab("Fournisseurs", new pageFournisseurs());
         tabbedPane.addTab("Ventes", new pageVentes());
         tabbedPane.addTab("Rapports", new pageRapports());
         tabbedPane.addTab("Quitter", pageExit);
+
+        // Récupérer données au changement de panel
+        tabbedPane.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                fetchAllData();
+                pageProduits.updateFSelector();
+            }
+        });
+
         add(tabbedPane);
+    }
+
+    private static void fetchAllData() {
+        FournisseurDAO.fetchData();
+        ProduitDAO.fetchData();
     }
 
     public static void main(String[] args) {
@@ -55,7 +78,6 @@ public class Interface extends JFrame {
             public void run() {
                 Interface Interface = new Interface();
                 Interface.setVisible(true);
-
             }
         });
     }

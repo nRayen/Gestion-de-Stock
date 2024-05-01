@@ -19,7 +19,7 @@ public class FournisseurDAO implements Dao<Fournisseur> {
     public FournisseurDAO() {
     }
 
-    private static List<Fournisseur> fournisseurs = new ArrayList<>();
+    public static List<Fournisseur> fournisseurs = new ArrayList<>();
 
     @Override
     public Fournisseur get(int id) {
@@ -81,8 +81,6 @@ public class FournisseurDAO implements Dao<Fournisseur> {
         }
 
         fournisseurs.add(fournisseur);
-        System.err.println(fournisseur.id);
-        System.err.println(fournisseurs.size());
     }
 
     @Override
@@ -153,8 +151,10 @@ public class FournisseurDAO implements Dao<Fournisseur> {
         fournisseurs.remove(fournisseur);
     }
 
-    public void fetchData() {
+    public static void fetchData() {
         try {
+            fournisseurs.clear();
+
             // Connexion à la base de données
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/stock", "root", "");
 
@@ -174,6 +174,7 @@ public class FournisseurDAO implements Dao<Fournisseur> {
 
                 Fournisseur f = new Fournisseur(name, country);
                 f.id = id;
+
                 fournisseurs.add(f);
             }
 

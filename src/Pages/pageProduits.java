@@ -1,6 +1,7 @@
 package Pages;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -9,7 +10,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -24,6 +28,7 @@ import Components.InputField;
 import Components.InputLabel;
 import Components.StyledButton;
 import Components.pageTitle;
+import DataAccessObject.FournisseurDAO;
 import DataAccessObject.ProduitDAO;
 import Stock.Fournisseur;
 import Stock.Produit;
@@ -31,18 +36,18 @@ import Stock.Produit;
 public class pageProduits extends JPanel {
 
     ProduitDAO pDAO = new ProduitDAO();
+    FournisseurDAO fDao = new FournisseurDAO();
 
     InputField nameInput = new InputField();
     InputField priceInput = new InputField();
     InputField quantitéInput = new InputField();
-    JComboBox<Fournisseur> fournisseurInput = new JComboBox<>();
+    JComboBox<Fournisseur> fournisseurSelector;
+    static Fournisseur selectorData[];
 
     JTable table;
     DefaultTableModel tableModel;
 
     public pageProduits() {
-
-        pDAO.fetchData();
 
         // Layout de base
         setLayout(new BorderLayout());
@@ -90,7 +95,7 @@ public class pageProduits extends JPanel {
             }
         });
 
-        JScrollPane fList = new JScrollPane(table); // Ajouter la JTable à la JScrollPane
+        JScrollPane pList = new JScrollPane(table); // Ajouter la JTable à la JScrollPane
         List<Produit> data = pDAO.getAll();
         for (Produit produit : data) {
             int id = produit.getId();
@@ -105,7 +110,7 @@ public class pageProduits extends JPanel {
         gbc.gridx = 1;
         gbc.weightx = 0.8;
         gbc.weighty = 0.8;
-        content.add(fList, gbc);
+        content.add(pList, gbc);
 
         ////////////////////////////////////////////////////////////////////// Panel
         ////////////////////////////////////////////////////////////////////// Info à
@@ -124,6 +129,21 @@ public class pageProduits extends JPanel {
         InputLabel quantitéLabel = new InputLabel("Quantité");
         InputLabel fournisseurLabel = new InputLabel("Fournisseur");
 
+        // Préparation des données pour le selector
+        selectorData = fDao.getAll().toArray(new Fournisseur[fDao.getAll().size()]);
+        fournisseurSelector = new JComboBox<Fournisseur>(selectorData);
+        fournisseurSelector.setRenderer(new DefaultListCellRenderer() { // Afficher fournisseur.name
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+                    boolean cellHasFocus) {
+
+                if (value instanceof Fournisseur) {
+                    value = ((Fournisseur) value).getName();
+                }
+                return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            }
+        });
+
         inputArea.add(nameLabel);
         inputArea.add(nameInput);
         inputArea.add(priceLabel);
@@ -131,7 +151,7 @@ public class pageProduits extends JPanel {
         inputArea.add(quantitéLabel);
         inputArea.add(quantitéInput);
         inputArea.add(fournisseurLabel);
-        inputArea.add(fournisseurInput);
+        inputArea.add(fournisseurSelector);
 
         // Button Area
 
@@ -177,11 +197,10 @@ public class pageProduits extends JPanel {
     // Fonctions
 
     private void addProduit() {
-
     }
 
     private void updateProduit() {
-
+        // fournisseurSelector.addItem(new Fournisseur("Ajouté la", "hongrie"));
     }
 
     private void deleteProduit() {
@@ -195,7 +214,7 @@ public class pageProduits extends JPanel {
         nameInput.setText(selected.getName());
         priceInput.setText(Float.toString(selected.getPrice()));
         quantitéInput.setText(Integer.toString(selected.getQuantité()));
-        fournisseurInput.setSelectedItem(null);
+        fournisseurSelector.setSelectedItem(selected.getIDFournisseur());
     }
 
     private boolean isAnyRowSelected() {
@@ -206,6 +225,12 @@ public class pageProduits extends JPanel {
         nameInput.setText("");
         priceInput.setText("");
         quantitéInput.setText("");
-        fournisseurInput.setSelectedItem(null);
+        fournisseurSelector.setSelectedItem(null);
     }
+
+    public void updateFSelector() {
+        fournisseurSelector
+                .setModel(new DefaultComboBoxModel<>(fDao.getAll().toArray(new Fournisseur[fDao.getAll().size()])));
+    }
+
 }
