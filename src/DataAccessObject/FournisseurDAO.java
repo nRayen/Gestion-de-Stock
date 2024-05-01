@@ -19,7 +19,7 @@ public class FournisseurDAO implements Dao<Fournisseur> {
     public FournisseurDAO() {
     }
 
-    private List<Fournisseur> fournisseurs = new ArrayList<>();
+    private static List<Fournisseur> fournisseurs = new ArrayList<>();
 
     @Override
     public Fournisseur get(int id) {
@@ -117,7 +117,7 @@ public class FournisseurDAO implements Dao<Fournisseur> {
         }
 
         fournisseur.setName(Objects.requireNonNull(params[0], "Name cannot be null"));
-        fournisseur.setCountry(Objects.requireNonNull(params[1], "Email cannot be null"));
+        fournisseur.setCountry(Objects.requireNonNull(params[1], "Country cannot be null"));
 
     }
 
