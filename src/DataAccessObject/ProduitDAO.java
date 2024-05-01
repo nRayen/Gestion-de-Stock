@@ -50,8 +50,8 @@ public class ProduitDAO implements Dao<Produit> {
             // Remplissage des paramètres de la requête SQL
             pstmt.setString(1, produit.getName());
             pstmt.setFloat(2, produit.getPrice());
-            pstmt.setInt(2, produit.getQuantité());
-            pstmt.setInt(2, produit.getIDFournisseur());
+            pstmt.setInt(3, produit.getQuantité());
+            pstmt.setInt(4, produit.getIDFournisseur());
 
             // Exécution de la requête SQL
             pstmt.executeUpdate();
@@ -60,10 +60,10 @@ public class ProduitDAO implements Dao<Produit> {
             // Récupérer ID attribué
             query = "SELECT id FROM produit WHERE name = ? AND price = ? AND quantité = ? AND id_fournisseur = ?";
             PreparedStatement pstmt2 = con.prepareStatement(query);
-            pstmt.setString(1, produit.getName());
-            pstmt.setFloat(2, produit.getPrice());
-            pstmt.setInt(2, produit.getQuantité());
-            pstmt.setInt(2, produit.getIDFournisseur());
+            pstmt2.setString(1, produit.getName());
+            pstmt2.setFloat(2, produit.getPrice());
+            pstmt2.setInt(3, produit.getQuantité());
+            pstmt2.setInt(4, produit.getIDFournisseur());
             ResultSet rs2 = pstmt2.executeQuery();
             while (rs2.next()) {
                 int id = rs2.getInt("id");
@@ -98,9 +98,9 @@ public class ProduitDAO implements Dao<Produit> {
             // Remplissage des paramètres de la requête SQL
             pstmt.setString(1, params[0]); // name
             pstmt.setFloat(2, Float.parseFloat(params[1] + "f")); // price
-            pstmt.setInt(2, Integer.parseInt(params[2])); // quantité
-            pstmt.setInt(2, Integer.parseInt(params[3])); // idFournisseur
-            pstmt.setInt(3, produit.getId());
+            pstmt.setInt(3, Integer.parseInt(params[2])); // quantité
+            pstmt.setInt(4, Integer.parseInt(params[3])); // idFournisseur
+            pstmt.setInt(5, produit.getId());
 
             // Exécution de la requête SQL
             pstmt.executeUpdate();

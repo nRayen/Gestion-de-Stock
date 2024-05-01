@@ -197,10 +197,29 @@ public class pageProduits extends JPanel {
     // Fonctions
 
     private void addProduit() {
+        String name = nameInput.getText();
+        Float price = Float.parseFloat(priceInput.getText());
+        int quantité = Integer.parseInt(quantitéInput.getText());
+        Fournisseur fournisseur = (Fournisseur) fournisseurSelector.getSelectedItem();
+        int idFournisseur = fournisseur.getId();
+        Produit produit = new Produit(name, price, quantité, idFournisseur);
+        pDAO.save(produit);
+        Object[] p = {
+                produit.getId(),
+                produit.getName(),
+                produit.getPrice(),
+                produit.getQuantité(),
+                produit.getIDFournisseur(),
+        };
+        System.out.println(name);
+        System.out.println(price);
+        System.out.println(quantité);
+        System.out.println(idFournisseur);
+        tableModel.addRow(p);
+        clearInputs();
     }
 
     private void updateProduit() {
-        // fournisseurSelector.addItem(new Fournisseur("Ajouté la", "hongrie"));
     }
 
     private void deleteProduit() {
