@@ -65,11 +65,15 @@ public class ProduitDAO implements Dao<Produit> {
             pstmt2.setInt(3, produit.getQuantité());
             pstmt2.setInt(4, produit.getIDFournisseur());
             ResultSet rs2 = pstmt2.executeQuery();
+
+            List<Integer> possibleIDs = new ArrayList<>();
+            int id;
             while (rs2.next()) {
-                int id = rs2.getInt("id");
-                produit.setId(id);
-                break;
+                possibleIDs.add(rs2.getInt("id"));
+                System.out.println(rs2.getInt("id"));
             }
+            id = possibleIDs.reversed().get(0);
+            produit.setId(id);
 
             // Fermeture de la connexion et du PreparedStatement
             pstmt2.close();

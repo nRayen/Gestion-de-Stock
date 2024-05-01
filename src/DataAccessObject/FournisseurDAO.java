@@ -63,11 +63,15 @@ public class FournisseurDAO implements Dao<Fournisseur> {
             pstmt2.setString(1, fournisseur.name);
             pstmt2.setString(2, fournisseur.country);
             ResultSet rs2 = pstmt2.executeQuery();
+
+            List<Integer> possibleIDs = new ArrayList<>();
+            int id;
             while (rs2.next()) {
-                int id = rs2.getInt("id");
-                fournisseur.id = id;
-                break;
+                possibleIDs.add(rs2.getInt("id"));
+                System.out.println(rs2.getInt("id"));
             }
+            id = possibleIDs.reversed().get(0);
+            fournisseur.setId(id);
 
             // Fermeture de la connexion et du PreparedStatement
             pstmt2.close();
