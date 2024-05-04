@@ -76,7 +76,7 @@ public class pageVentes extends JPanel {
 
         // Création du tableau
 
-        String columns[] = { "ID", "Name", "Price", "Quantité" };
+        String columns[] = { "ID", "Name", "Quantité", "Prix" };
         tableModel = new DefaultTableModel(columns, 0) {
             public boolean isCellEditable(int row, int column) {
                 return false; // Toujours retourner faux pour savoir si la cellule est modifiable
@@ -192,11 +192,49 @@ public class pageVentes extends JPanel {
     // Fonctions
 
     private void addProduit() {
-        // Il faut vérifier si le produit est déja dans le panier
+
         Produit produit = (Produit) produitSelector.getSelectedItem();
         int id_produit = produit.getId();
         int quantité = Integer.parseInt(quantitéInput.getText());
+        if (quantité <= 0) {
+            JOptionPane.showMessageDialog(null, "La quantité ne peut pas être nulle ou négative");
+            return;
+        }
+
         ProduitVendu produitVendu = new ProduitVendu(id_produit, quantité);
+
+        // Il faut vérifier si le produit est déja dans le panier
+        for (ProduitVendu pV : listePanier) {
+            if (pV.getId_produit() == id_produit) {
+                pV.setQuantité(pV.getQuantité() + quantité);
+                JOptionPane.showMessageDialog(null,
+                        quantité + " " + pDao.get(id_produit).getName() + " ont été ajouté au panier");
+
+                int row = -1;
+                for (int i = 0; i < tableModel.getRowCount(); ++i)
+                    if (tableModel.getValueAt(i, 0).equals(id_produit)) {
+                        row = i;
+                        break;
+                    }
+
+                if (row != -1) {
+                    tableModel.setValueAt(pV.getQuantité(), row, 2);
+                }
+                return;
+            }
+        }
+
+        // Si le panier ne contient pas déja le produit
+        listePanier.add(produitVendu);
+        Object[] pVendu = {
+                produitVendu.getId_produit(),
+                pDao.get(id_produit).getName(),
+                produitVendu.getQuantité(),
+                produitVendu.getTotal(),
+        };
+        tableModel.addRow(pVendu);
+        JOptionPane.showMessageDialog(null,
+                quantité + " " + pDao.get(id_produit).getName() + " ont été ajouté au panier");
     }
 
     private void deleteProduit() {
