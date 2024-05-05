@@ -192,15 +192,16 @@ public class pageVentes extends JPanel {
     // Fonctions
 
     private void addProduit() {
-
+        // Récupérer données
         Produit produit = (Produit) produitSelector.getSelectedItem();
         int id_produit = produit.getId();
         int quantité = Integer.parseInt(quantitéInput.getText());
+        // Vérifier que quantité est positif
         if (quantité <= 0) {
             JOptionPane.showMessageDialog(null, "La quantité ne peut pas être nulle ou négative");
             return;
         }
-
+        // Créer l'objet
         ProduitVendu produitVendu = new ProduitVendu(id_produit, quantité);
 
         // Il faut vérifier si le produit est déja dans le panier
@@ -238,7 +239,16 @@ public class pageVentes extends JPanel {
     }
 
     private void deleteProduit() {
-        System.out.println(table.getSelectedRow());
+        int row = table.getSelectedRow();
+        int id = Integer.parseInt(table.getModel().getValueAt(row, 0).toString());
+
+        for (ProduitVendu pV : listePanier) {
+            if (pV.getId_produit() == id) {
+                listePanier.remove(pV);
+                break;
+            }
+        }
+        tableModel.removeRow(row);
     }
 
     private void createVente() {

@@ -121,7 +121,7 @@ public class pageFournisseurs extends JPanel {
         StyledButton updateButton = new StyledButton("Mettre à jour");
         StyledButton removeButton = new StyledButton("Supprimer");
 
-        buttonArea.add(addButton);
+        // buttonArea.add(addButton);
         buttonArea.add(updateButton);
         buttonArea.add(removeButton);
 
