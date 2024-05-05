@@ -3,13 +3,14 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : sam. 04 mai 2024 à 02:01
+-- Généré le : dim. 05 mai 2024 à 19:45
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -39,7 +40,9 @@ CREATE TABLE `fournisseur` (
 INSERT INTO `fournisseur` (`id`, `name`, `country`) VALUES
 (7, 'Max', 'Ici'),
 (8, 'Arthur', 'EFREI'),
-(9, 'Dodou', 'Mali');
+(9, 'Dodou', 'Mali'),
+(10, 'Allo', 'Marseille'),
+(11, 'qsdqd', 'dqdq');
 
 -- --------------------------------------------------------
 
@@ -64,7 +67,7 @@ INSERT INTO `produit` (`id`, `name`, `quantité`, `price`, `id_fournisseur`) VAL
 (7, 'Ecran 24\" 165Hz', 90, 250, 7),
 (8, 'Casque', 86, 100, 7),
 (9, 'Rayen', 12, 8, 8),
-(10, 'Cocaîne', 17, 50, 9);
+(10, 'Zizi', 7, 50, 9);
 
 -- --------------------------------------------------------
 
@@ -85,9 +88,10 @@ CREATE TABLE `produitsvendu` (
 --
 
 INSERT INTO `produitsvendu` (`id`, `id_vente`, `id_produit`, `quantité`, `total`) VALUES
-(1, 1, 8, 1, 100),
-(2, 1, 7, 1, 150),
-(3, 1, 6, 1, 250);
+(4, 5, 6, 25, 3750),
+(5, 5, 9, 14, 112),
+(6, 6, 10, 10, 500),
+(7, 8, 10, 10, 500);
 
 -- --------------------------------------------------------
 
@@ -120,15 +124,20 @@ INSERT INTO `user` (`username`, `password`) VALUES
 CREATE TABLE `vente` (
   `id` int(11) NOT NULL,
   `client` varchar(50) NOT NULL,
-  `total` int(11) NOT NULL
+  `total` float NOT NULL,
+  `date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `vente`
 --
 
-INSERT INTO `vente` (`id`, `client`, `total`) VALUES
-(1, 'Anthony Martial', 500);
+INSERT INTO `vente` (`id`, `client`, `total`, `date`) VALUES
+(4, 'fqsfqf', 21150, '2001-11-12'),
+(5, 'Dodou', 3862, '2004-05-31'),
+(6, 'Moi', 500, '2003-04-15'),
+(7, 'Moi', 0, '2035-11-15'),
+(8, 'Moi', 500, '2004-05-31');
 
 --
 -- Index pour les tables déchargées
@@ -169,25 +178,25 @@ ALTER TABLE `vente`
 -- AUTO_INCREMENT pour la table `fournisseur`
 --
 ALTER TABLE `fournisseur`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT pour la table `produit`
 --
 ALTER TABLE `produit`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT pour la table `produitsvendu`
 --
 ALTER TABLE `produitsvendu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT pour la table `vente`
 --
 ALTER TABLE `vente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Contraintes pour les tables déchargées
