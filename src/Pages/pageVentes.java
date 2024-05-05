@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -32,6 +33,7 @@ import Components.pageTitle;
 import DataAccessObject.ProduitDAO;
 import DataAccessObject.ProduitVenduDAO;
 import DataAccessObject.VenteDAO;
+import Stock.Fournisseur;
 import Stock.Produit;
 import Stock.ProduitVendu;
 import Stock.Vente;
@@ -327,4 +329,10 @@ public class pageVentes extends JPanel {
 
         return true;
     }
+
+    public void updatePSelector() {
+        produitSelector
+                .setModel(new DefaultComboBoxModel<>(pDao.getAll().toArray(new Produit[pDao.getAll().size()])));
+    }
+
 }

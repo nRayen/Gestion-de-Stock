@@ -34,9 +34,10 @@ public class Interface extends JFrame {
 
         // Ajout des Pages au TabbedPane
         pageProduits pageProduits = new pageProduits();
+        pageVentes pageVentes = new pageVentes();
         tabbedPane.addTab("Produits", pageProduits);
         tabbedPane.addTab("Fournisseurs", new pageFournisseurs());
-        tabbedPane.addTab("Ventes", new pageVentes());
+        tabbedPane.addTab("Ventes", pageVentes);
         tabbedPane.addTab("Rapports", new pageRapports());
         tabbedPane.addTab("Quitter", pageExit);
 
@@ -45,6 +46,8 @@ public class Interface extends JFrame {
             public void stateChanged(ChangeEvent e) {
                 fetchAllData();
                 pageProduits.updateFSelector();
+                pageProduits.updatePList();
+                pageVentes.updatePSelector();
             }
         });
 

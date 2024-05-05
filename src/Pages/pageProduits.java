@@ -271,4 +271,19 @@ public class pageProduits extends JPanel {
                 .setModel(new DefaultComboBoxModel<>(fDao.getAll().toArray(new Fournisseur[fDao.getAll().size()])));
     }
 
+    public void updatePList() {
+
+        tableModel.setRowCount(0);
+        List<Produit> data = pDAO.getAll();
+        for (Produit produit : data) {
+            int id = produit.getId();
+            String name = produit.getName();
+            Float price = produit.getPrice();
+            int quantité = produit.getQuantité();
+            int idFournisseur = produit.getIDFournisseur();
+            Object[] p = { id, name, price, quantité, fDao.get(idFournisseur).getName() };
+            tableModel.addRow(p);
+        }
+    }
+
 }

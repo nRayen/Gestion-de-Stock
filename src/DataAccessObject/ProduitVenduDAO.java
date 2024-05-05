@@ -14,6 +14,8 @@ import Stock.ProduitVendu;
 
 public class ProduitVenduDAO implements Dao<ProduitVendu> {
 
+    ProduitDAO pDAO = new ProduitDAO();
+
     public ProduitVenduDAO() {
     }
 
@@ -77,7 +79,24 @@ public class ProduitVenduDAO implements Dao<ProduitVendu> {
 
             // Fermeture de la connexion et du PreparedStatement
             pstmt2.close();
+
+            // Actualiser état du stock
+
+            query = "UPDATE `produit` SET quantité = (?) WHERE id = (?)";
+            PreparedStatement pstmt3 = con.prepareStatement(query);
+
+            // Remplissage des paramètres de la requête SQL
+            int quantité = pDAO.get(produitVendu.getId_produit()).getQuantité() - produitVendu.getQuantité();
+            pstmt3.setInt(1, quantité);
+            pstmt3.setInt(2, produitVendu.getId_produit());
+
+            // Exécution de la requête SQL
+            pstmt3.executeUpdate();
+
+            // Fermeture de la connexion et du PreparedStatement
+            pstmt3.close();
             con.close();
+
         } catch (SQLException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Echec : " + ex.getMessage(), "Erreur", 0);

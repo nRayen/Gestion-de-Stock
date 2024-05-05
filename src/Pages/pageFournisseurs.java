@@ -161,8 +161,6 @@ public class pageFournisseurs extends JPanel {
         Object[] f = { fournisseur.getId(), fournisseur.getName(), fournisseur.getCountry() };
         tableModel.addRow(f);
         clearInputs();
-
-        // Modfiier dans la BDD
     }
 
     private void deleteFournisseur() {
