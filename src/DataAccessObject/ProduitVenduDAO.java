@@ -44,26 +44,27 @@ public class ProduitVenduDAO implements Dao<ProduitVendu> {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/stock", "root", "");
 
             // Préparation de la requête SQL
-            String query = "INSERT INTO produit (name,price,quantité,id_fournisseur) VALUES (?, ?, ?, ?)";
+            String query = "INSERT INTO produitsvendu (id_vente,id_produit,quantité,total) VALUES (?, ?, ?, ?)";
             PreparedStatement pstmt = con.prepareStatement(query);
 
             // Remplissage des paramètres de la requête SQL
-            // pstmt.setString(1, produit.getName());
-            // pstmt.setFloat(2, produit.getPrice());
-            // pstmt.setInt(3, produit.getQuantité());
-            // pstmt.setInt(4, produit.getIDFournisseur());
+            pstmt.setInt(1, produitVendu.getId_vente());
+            pstmt.setInt(2, produitVendu.getId_produit());
+            pstmt.setInt(3, produitVendu.getQuantité());
+            pstmt.setFloat(4, produitVendu.getTotal());
 
             // Exécution de la requête SQL
             pstmt.executeUpdate();
             pstmt.close();
 
             // Récupérer ID attribué
-            query = "SELECT id FROM produit WHERE name = ? AND quantité = ? AND id_fournisseur = ?";
+            query = "SELECT id FROM produitsvendu WHERE id_vente = ? AND id_produit = ? AND quantité = ? AND total = ?";
             PreparedStatement pstmt2 = con.prepareStatement(query);
-            // pstmt2.setString(1, produit.getName());
-            // pstmt2.setInt(2, produit.getQuantité());
-            // pstmt2.setInt(3, produit.getIDFournisseur());
-            // System.err.println(produit.getPrice());
+            pstmt2.setInt(1, produitVendu.getId_vente());
+            pstmt2.setInt(2, produitVendu.getId_produit());
+            pstmt2.setInt(3, produitVendu.getQuantité());
+            pstmt2.setFloat(4, produitVendu.getTotal());
+
             ResultSet rs2 = pstmt2.executeQuery();
 
             List<Integer> possibleIDs = new ArrayList<>();
@@ -78,9 +79,6 @@ public class ProduitVenduDAO implements Dao<ProduitVendu> {
             // Fermeture de la connexion et du PreparedStatement
             pstmt2.close();
             con.close();
-
-            // Affichage d'un message de succès
-            JOptionPane.showMessageDialog(null, "Le produit à été ajouté avec succès");
         } catch (SQLException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Echec : " + ex.getMessage(), "Erreur", 0);
@@ -88,5 +86,13 @@ public class ProduitVenduDAO implements Dao<ProduitVendu> {
 
         listeVendus.add(produitVendu);
     }
+
+    @Override
+    public void update(ProduitVendu produitVendu, String[] params) {
+    };
+
+    @Override
+    public void delete(ProduitVendu produitVendu) {
+    };
 
 }

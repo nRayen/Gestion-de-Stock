@@ -296,7 +296,7 @@ public class pageVentes extends JPanel {
         // Enregistrer les produits
         for (ProduitVendu pV : listePanier) {
             pV.setId_vente(vente.getId());
-
+            pvDao.save(pV);
         }
     }
 
