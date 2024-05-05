@@ -33,7 +33,6 @@ import Components.pageTitle;
 import DataAccessObject.ProduitDAO;
 import DataAccessObject.ProduitVenduDAO;
 import DataAccessObject.VenteDAO;
-import Stock.Fournisseur;
 import Stock.Produit;
 import Stock.ProduitVendu;
 import Stock.Vente;
