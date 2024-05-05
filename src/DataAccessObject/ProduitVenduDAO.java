@@ -10,7 +10,6 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import Stock.Produit;
 import Stock.ProduitVendu;
 
 public class ProduitVenduDAO implements Dao<ProduitVendu> {

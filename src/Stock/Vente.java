@@ -1,7 +1,5 @@
 package Stock;
 
-import java.sql.Date;
-
 public class Vente {
 
     public int id;

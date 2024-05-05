@@ -8,19 +8,11 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
-import javax.swing.JFormattedTextField.AbstractFormatter;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -107,7 +99,6 @@ public class pageVentes extends JPanel {
         table.setColumnSelectionAllowed(false);
 
         JScrollPane vList = new JScrollPane(table); // Ajouter la JTable à la JScrollPane
-        List<Produit> data;
 
         panierPanel.add(vList, BorderLayout.CENTER);
 
