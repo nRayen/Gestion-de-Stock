@@ -29,9 +29,9 @@ public class RapportDAO {
     };
 
     public void createRapport(Rapport rapport) {
-
         // Récupérer le stock
-        stock = new ArrayList<Produit>();
+        stock = pDao.getAll();
+        ventes = new ArrayList<Vente>();
 
         // Récupérer les ventes
         try {
@@ -42,10 +42,13 @@ public class RapportDAO {
             String query = "SELECT * FROM vente WHERE date BETWEEN ? and ?";
             PreparedStatement pstmt = con.prepareStatement(query);
 
+            // pstmt.setDate(1, Date.valueOf(rapport.getDateDébut()));
+            // pstmt.setDate(2, Date.valueOf(rapport.getDateFin()));
+            // Dates de test
+            pstmt.setDate(1, Date.valueOf("2002-01-01"));
+            pstmt.setDate(2, Date.valueOf("2005-01-01"));
             // Exécution de la requête SQL
-            ResultSet rs = pstmt.executeQuery(query);
-            pstmt.setDate(1, Date.valueOf(rapport.getDateDébut()));
-            pstmt.setDate(2, Date.valueOf(rapport.getDateFin()));
+            ResultSet rs = pstmt.executeQuery();
 
             // Traitement du résultat
             while (rs.next()) {
@@ -77,9 +80,9 @@ public class RapportDAO {
                 String query = "SELECT * FROM produitsvendu WHERE id_vente = ?";
                 PreparedStatement pstmt = con.prepareStatement(query);
 
+                pstmt.setInt(1, v.getId());
                 // Exécution de la requête SQL
                 ResultSet rs = pstmt.executeQuery();
-                pstmt.setInt(1, v.getId());
 
                 // Traitement du résultat
                 while (rs.next()) {
@@ -102,6 +105,10 @@ public class RapportDAO {
         }
 
         ////////////////////////////////////////////// Création fichier texte
-
+        System.out.println("--------------Rapport-----------------");
+        System.out.println("Stock :");
+        for (Produit produit : stock) {
+            System.out.println(produit.getName() + " " + produit.getPrice());
+        }
     }
 }
