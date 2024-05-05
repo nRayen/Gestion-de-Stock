@@ -19,6 +19,15 @@ public class ProduitVendu {
         this.total = this.price * this.quantité;
     }
 
+    public ProduitVendu(int id, int id_vente, int id_produit, int quantité) {
+        this.id = id;
+        this.id_vente = id_vente;
+        this.id_produit = id_produit;
+        this.quantité = quantité;
+        this.price = pDao.get(id_produit).getPrice();
+        this.total = this.price * this.quantité;
+    }
+
     // Getters
     public int getId() {
         return this.id;
