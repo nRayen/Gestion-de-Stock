@@ -8,11 +8,19 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
+import javax.swing.JFormattedTextField.AbstractFormatter;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -25,12 +33,16 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import Components.InputField;
 import Components.InputLabel;
 import Components.StyledButton;
 import Components.pageTitle;
 import DataAccessObject.ProduitDAO;
+import DataAccessObject.ProduitVenduDAO;
+import DataAccessObject.VenteDAO;
 import Stock.Produit;
 import Stock.ProduitVendu;
+import Stock.Vente;
 
 public class pageVentes extends JPanel {
 
@@ -41,7 +53,15 @@ public class pageVentes extends JPanel {
     JComboBox<Produit> produitSelector;
     static Produit selectorData[];
 
+    InputField clientInput;
+    InputField dateInput;
+
+    float total;
+    JLabel totalPrice;
+
     ProduitDAO pDao = new ProduitDAO();
+    ProduitVenduDAO pvDao = new ProduitVenduDAO();
+    VenteDAO vDao = new VenteDAO();
 
     private List<ProduitVendu> listePanier = new ArrayList<ProduitVendu>();
 
@@ -86,19 +106,6 @@ public class pageVentes extends JPanel {
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setColumnSelectionAllowed(false);
 
-        // Ecouteur d'évènements pour la sélection de ligne
-        // table.getSelectionModel().addListSelectionListener(new
-        // ListSelectionListener() {
-        // public void valueChanged(ListSelectionEvent e) {
-        // if (!e.getValueIsAdjusting()) { // Empêche l'écouteur d'éxécuter 2 fois
-        // if (!isAnyRowSelected()) {
-        // return;
-        // }
-        // getProduitInfo();
-        // }
-        // }
-        // });
-
         JScrollPane vList = new JScrollPane(table); // Ajouter la JTable à la JScrollPane
         List<Produit> data;
 
@@ -106,12 +113,29 @@ public class pageVentes extends JPanel {
 
         // Infos panier
         JPanel panierInfo = new JPanel();
-        panierInfo.setLayout(new GridLayout(1, 2));
-
+        panierInfo.setLayout(new GridLayout(2, 2));
         panierPanel.add(panierInfo, BorderLayout.SOUTH);
 
+        // Nom du client
+        JPanel clientArea = new JPanel();
+        InputLabel clientLabel = new InputLabel("Client :");
+        clientInput = new InputField();
+        clientArea.add(clientLabel);
+        clientArea.add(clientInput);
+
+        panierInfo.add(clientArea);
+
+        // Sélecteur de date
+        JPanel dateArea = new JPanel();
+        InputLabel dateLabel = new InputLabel("Date :");
+        dateInput = new InputField();
+        dateArea.add(dateLabel);
+        dateArea.add(dateInput);
+
+        panierInfo.add(dateArea);
+
         // Affichage prix total
-        JLabel totalPrice = new JLabel("Prix :");
+        totalPrice = new JLabel("Prix :");
         totalPrice.setHorizontalAlignment(SwingConstants.CENTER);
         panierInfo.add(totalPrice);
 
@@ -208,6 +232,7 @@ public class pageVentes extends JPanel {
         for (ProduitVendu pV : listePanier) {
             if (pV.getId_produit() == id_produit) {
                 pV.setQuantité(pV.getQuantité() + quantité);
+                pV.setTotal(pV.getQuantité() * pV.getPrice());
                 JOptionPane.showMessageDialog(null,
                         quantité + " " + pDao.get(id_produit).getName() + " ont été ajouté au panier");
 
@@ -220,6 +245,7 @@ public class pageVentes extends JPanel {
 
                 if (row != -1) {
                     tableModel.setValueAt(pV.getQuantité(), row, 2);
+                    tableModel.setValueAt(pV.getTotal() + "€", row, 3);
                 }
                 return;
             }
@@ -231,13 +257,16 @@ public class pageVentes extends JPanel {
                 produitVendu.getId_produit(),
                 pDao.get(id_produit).getName(),
                 produitVendu.getQuantité(),
-                produitVendu.getTotal(),
+                produitVendu.getTotal() + "€",
         };
         tableModel.addRow(pVendu);
         JOptionPane.showMessageDialog(null,
                 quantité + " " + pDao.get(id_produit).getName() + " ont été ajouté au panier");
+        updateTotal();
+
     }
 
+    // Supprimer produit
     private void deleteProduit() {
         int row = table.getSelectedRow();
         int id = Integer.parseInt(table.getModel().getValueAt(row, 0).toString());
@@ -249,13 +278,62 @@ public class pageVentes extends JPanel {
             }
         }
         tableModel.removeRow(row);
+        updateTotal();
     }
 
     private void createVente() {
+        // Créer la vente
+        String name = clientInput.getText();
+        String date = dateInput.getText();
+        if (!isDateValid(date)) {
+            JOptionPane.showMessageDialog(null, "La date n'est pas valide");
+            return;
+        }
 
+        Vente vente = new Vente(name, total, date);
+        vDao.save(vente);
+
+        // Enregistrer les produits
+        for (ProduitVendu pV : listePanier) {
+            pV.setId_vente(vente.getId());
+
+        }
     }
 
     private boolean isAnyRowSelected() {
         return !table.getSelectionModel().isSelectionEmpty();
+    }
+
+    private void updateTotal() {
+        float newTotal = 0;
+        for (ProduitVendu pV : listePanier) {
+            newTotal += pV.getPrice() * pV.getQuantité();
+        }
+
+        total = newTotal;
+        totalPrice.setText("Prix : " + total + "€");
+    }
+
+    private boolean isDateValid(String date) {
+        String[] liste = date.split("/");
+        if (Integer.parseInt(liste[1]) < 0 || Integer.parseInt(liste[1]) > 12) {
+            return false;
+        }
+        int maxDay = 31;
+
+        if (Integer.parseInt(liste[1]) == 2) {
+            maxDay = 29;
+        } else if (Integer.parseInt(liste[1]) % 2 == 0) {
+            maxDay = 29;
+        }
+
+        if (Integer.parseInt(liste[0]) < 0 || Integer.parseInt(liste[0]) > maxDay) {
+            return false;
+        }
+        if (Integer.parseInt(liste[2]) < 0) {
+            return false;
+        }
+
+        return true;
     }
 }

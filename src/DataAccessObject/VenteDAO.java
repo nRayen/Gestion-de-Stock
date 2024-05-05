@@ -1,11 +1,13 @@
 package DataAccessObject;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -42,20 +44,24 @@ public class VenteDAO implements Dao<Vente> {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/stock", "root", "");
 
             // Préparation de la requête SQL
-            String query = "INSERT INTO vente (client) VALUES (?)";
+            String query = "INSERT INTO vente (client, total, date) VALUES (?,?,?)";
             PreparedStatement pstmt = con.prepareStatement(query);
 
             // Remplissage des paramètres de la requête SQL
             pstmt.setString(1, vente.getClientName());
+            pstmt.setFloat(2, vente.getTotal());
+            pstmt.setDate(3, createSQLDate(vente.getDate()));
 
             // Exécution de la requête SQL
             pstmt.executeUpdate();
             pstmt.close();
 
             // Récupérer ID attribué
-            query = "SELECT id FROM vente WHERE client = ?";
+            query = "SELECT id FROM vente WHERE client = ? AND total = ? AND date = ?";
             PreparedStatement pstmt2 = con.prepareStatement(query);
             pstmt2.setString(1, vente.getClientName());
+            pstmt2.setFloat(2, vente.getTotal());
+            pstmt2.setDate(3, createSQLDate(vente.getDate()));
             ResultSet rs2 = pstmt2.executeQuery();
 
             List<Integer> possibleIDs = new ArrayList<>();
@@ -86,6 +92,13 @@ public class VenteDAO implements Dao<Vente> {
 
     @Override
     public void delete(Vente vente) {
+    }
+
+    private Date createSQLDate(String date) {
+        String[] n = date.split("/");
+        List<String> list = Arrays.asList(n).reversed();
+        String SQLDate = String.join("-", list);
+        return java.sql.Date.valueOf(SQLDate);
     }
 
 }
