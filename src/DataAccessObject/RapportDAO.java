@@ -23,7 +23,7 @@ public class RapportDAO {
     ProduitDAO pDao = new ProduitDAO();
 
     List<Produit> stock;
-    List<Vente> ventes;
+    public List<Vente> ventes;
 
     public RapportDAO() {
     };
