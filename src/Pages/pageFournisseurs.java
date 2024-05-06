@@ -61,7 +61,7 @@ public class pageFournisseurs extends JPanel {
         /////////////////////////////////////////////////////////////////////// droite
 
         // Création du tableau
-        String columns[] = { "ID", "Name", "Country" };
+        String columns[] = { "ID", "Nom", "Pays" };
         tableModel = new DefaultTableModel(columns, 0) {
             public boolean isCellEditable(int row, int column) {
                 return false; // Toujours retourner faux pour savoir si la cellule est modifiable

@@ -3,6 +3,7 @@ package Pages;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -85,11 +86,12 @@ public class pageVentes extends JPanel {
 
         // Titre
         pageTitle panierTitle = new pageTitle("Panier");
+        panierTitle.reverseColors();
         panierPanel.add(panierTitle, BorderLayout.NORTH);
 
         // Création du tableau
 
-        String columns[] = { "ID", "Name", "Quantité", "Prix" };
+        String columns[] = { "ID", "Nom", "Quantité", "Prix" };
         tableModel = new DefaultTableModel(columns, 0) {
             public boolean isCellEditable(int row, int column) {
                 return false; // Toujours retourner faux pour savoir si la cellule est modifiable
@@ -128,6 +130,7 @@ public class pageVentes extends JPanel {
 
         // Affichage prix total
         totalPrice = new JLabel("Prix :");
+        totalPrice.setFont(new Font("Montserrat", Font.PLAIN, 25));
         totalPrice.setHorizontalAlignment(SwingConstants.CENTER);
         panierInfo.add(totalPrice);
 

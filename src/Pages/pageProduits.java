@@ -73,7 +73,7 @@ public class pageProduits extends JPanel {
         /////////////////////////////////////////////////////////////// Liste à droite
 
         // Création du tableau
-        String columns[] = { "ID", "Name", "Price", "Quantité", "Fournisseur" };
+        String columns[] = { "ID", "Nom", "Prix", "Quantité", "Fournisseur" };
         tableModel = new DefaultTableModel(columns, 0) {
             public boolean isCellEditable(int row, int column) {
                 return false; // Toujours retourner faux pour savoir si la cellule est modifiable
