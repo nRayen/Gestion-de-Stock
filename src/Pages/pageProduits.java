@@ -230,6 +230,8 @@ public class pageProduits extends JPanel {
 
         tableModel.setValueAt(param[0], row, 1);
         tableModel.setValueAt(param[1], row, 2);
+        tableModel.setValueAt(param[2], row, 3);
+        tableModel.setValueAt(fournisseur.getName(), row, 4);
 
         // Modifier dans la BDD
         pDAO.update(pDAO.get(id), param);
