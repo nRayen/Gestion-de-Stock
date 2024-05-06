@@ -1,5 +1,8 @@
 package DataAccessObject;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -105,10 +108,20 @@ public class RapportDAO {
         }
 
         ////////////////////////////////////////////// Création fichier texte
-        System.out.println("--------------Rapport-----------------");
-        System.out.println("Stock :");
-        for (Produit produit : stock) {
-            System.out.println(produit.getName() + " " + produit.getPrice());
+        try {
+            File rapportTxt = new File("rapport.txt");
+            FileWriter writer = new FileWriter(rapportTxt);
+ 
+            writer.write("-----------------Rapport---------------");
+            writer.write("\nEtat du stock :");
+            for (Produit produit : stock) {
+                writer.write("\n" + produit.getName() + " " + produit.getQuantité());
+            }
+ 
+            writer.close();
+        } catch (IOException e) {
+            // TODO: handle exception
+            e.printStackTrace();
         }
     }
 }
