@@ -1,5 +1,8 @@
 package DataAccessObject;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -7,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -21,9 +25,12 @@ public class RapportDAO {
     String dateFin;
 
     ProduitDAO pDao = new ProduitDAO();
+    FournisseurDAO fDao = new FournisseurDAO();
+    ProduitVenduDAO pvDao = new ProduitVenduDAO();
 
     List<Produit> stock;
     public List<Vente> ventes;
+    public List<ProduitVendu> produitsVendus;
 
     public RapportDAO() {
     };
@@ -45,8 +52,8 @@ public class RapportDAO {
             // pstmt.setDate(1, Date.valueOf(rapport.getDateDébut()));
             // pstmt.setDate(2, Date.valueOf(rapport.getDateFin()));
             // Dates de test
-            pstmt.setDate(1, Date.valueOf("2002-01-01"));
-            pstmt.setDate(2, Date.valueOf("2005-01-01"));
+            pstmt.setDate(1, rapport.getSQLDateDébut());
+            pstmt.setDate(2, rapport.getSQLDateFin());
             // Exécution de la requête SQL
             ResultSet rs = pstmt.executeQuery();
 
@@ -55,7 +62,7 @@ public class RapportDAO {
                 int id = rs.getInt("id");
                 String client = rs.getString("client");
                 float total = rs.getFloat("total");
-                String date = rs.getDate("date").toString();
+                Date date = rs.getDate("date");
 
                 Vente v = new Vente(id, client, total, date);
                 ventes.add(v);
@@ -105,10 +112,66 @@ public class RapportDAO {
         }
 
         ////////////////////////////////////////////// Création fichier texte
-        System.out.println("--------------Rapport-----------------");
-        System.out.println("Stock :");
-        for (Produit produit : stock) {
-            System.out.println(produit.getName() + " " + produit.getPrice());
+        try {
+            File rapportTxt = new File("rapport.txt");
+            FileWriter writer = new FileWriter(rapportTxt);
+
+            writer.write("<<==================== Rapport du " + rapport.getDate() + " ====================>>");
+            writer.write("\n");
+
+            int CA = 0;
+            for (Vente v : ventes) {
+                CA += v.getTotal();
+            }
+
+            writer.write("\nSur la période du " + rapport.getDateDébut() + " au " + rapport.getDateFin()
+                    + ", vous avez réalisez un chiffre d'affaire de " + CA + "€");
+            writer.write("\n");
+            writer.write(
+                    "\n<------------------------------------- Etat du stock ------------------------------------>");
+            writer.write("\n");
+
+            for (Produit produit : stock) {
+                writer.write("\n ◢ " + produit.getName());
+                writer.write("\n ⊢   ------- Quantité : " + produit.getQuantité());
+                writer.write("\n ⊢   ----------- Prix : " + produit.getPrice() + "€");
+                writer.write("\n ⨽   ---- Fournisseur : " + fDao.get(produit.getIDFournisseur()).getName());
+                writer.write("\n");
+            }
+
+            writer.write("\n");
+            writer.write("\n");
+            writer.write("\n");
+
+            writer.write("\n<---------------- Ventes éffectuées entre le " + rapport.getDateDébut() + " et le "
+                    + rapport.getDateFin() + " ---------------->");
+            writer.write("\n");
+
+            for (Vente v : ventes) {
+                writer.write("\n ◢ Vente à " + v.getClientName() + " le " + v.getDate());
+                writer.write("\n ⊢   ------- Prix : " + v.getTotal());
+                writer.write("\n ⨽   ------- ◢Liste des produits");
+
+                ProduitVendu pV;
+                for (Iterator<ProduitVendu> it = v.getProduits().iterator(); it.hasNext();) {
+                    pV = it.next();
+                    // ... work with movie
+                    writer.write("\n               ⊢  ---- " + pV.getQuantité() + "x "
+                            + pDao.get(pV.getId_produit()).getName() + " = " + pV.getTotal() + "€");
+                    if (!it.hasNext()) { // the last element
+                        writer.write("\n               ⨽  ---- " + pV.getQuantité() + "x "
+                                + pDao.get(pV.getId_produit()).getName() + " = " + pV.getTotal() + "€");
+
+                    }
+                }
+
+                writer.write("\n");
+            }
+
+            writer.close();
+        } catch (IOException e) {
+            // TODO: handle exception
+            e.printStackTrace();
         }
     }
 }
