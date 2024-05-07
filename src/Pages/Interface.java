@@ -1,7 +1,6 @@
 package Pages;
 
 import javax.swing.*;
-import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -57,31 +56,5 @@ public class Interface extends JFrame {
     private static void fetchAllData() {
         FournisseurDAO.fetchData();
         ProduitDAO.fetchData();
-    }
-
-    public static void main(String[] args) {
-
-        // UIManager.setLookAndFeel(new FlatLightLaf());
-        try {
-
-            // Parcourir les Look and Feel disponibles
-            for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    // Utiliser le Look and Feel "Nimbus"
-                    UIManager.setLookAndFeel("com.formdev.flatlaf.FlatLightLaf");
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            // En cas d'erreur, afficher la trace
-            e.printStackTrace();
-        }
-
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                Interface Interface = new Interface();
-                Interface.setVisible(true);
-            }
-        });
     }
 }
