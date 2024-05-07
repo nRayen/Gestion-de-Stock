@@ -2,9 +2,9 @@ package Stock;
 
 public class Fournisseur {
 
-    public int id;
-    public String name;
-    public String country;
+    private int id;
+    private String name;
+    private String country;
 
     public Fournisseur(String name, String country) {
         this.name = name;

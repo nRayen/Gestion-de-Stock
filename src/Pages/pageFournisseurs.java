@@ -86,7 +86,7 @@ public class pageFournisseurs extends JPanel {
         JScrollPane fList = new JScrollPane(table); // Ajouter la JTable à la JScrollPane
         List<Fournisseur> data = fDAO.getAll();
         for (Fournisseur fournisseur : data) {
-            Object[] f = { fournisseur.id, fournisseur.name, fournisseur.country };
+            Object[] f = { fournisseur.getId(), fournisseur.getName(), fournisseur.getCountry() };
             tableModel.addRow(f);
         }
 
