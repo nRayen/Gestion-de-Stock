@@ -297,7 +297,7 @@ public class pageVentes extends JPanel {
             pvDao.save(pV);
         }
 
-        // clearAll();
+        clearAll();
     }
 
     private boolean isAnyRowSelected() {

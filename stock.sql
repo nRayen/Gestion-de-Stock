@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : dim. 05 mai 2024 à 19:45
+-- Généré le : mar. 07 mai 2024 à 03:27
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -38,11 +38,14 @@ CREATE TABLE `fournisseur` (
 --
 
 INSERT INTO `fournisseur` (`id`, `name`, `country`) VALUES
-(7, 'Max', 'Ici'),
-(8, 'Arthur', 'EFREI'),
-(9, 'Dodou', 'Mali'),
-(10, 'Allo', 'Marseille'),
-(11, 'qsdqd', 'dqdq');
+(15, 'Nike', 'Californie'),
+(16, 'Adidas', 'Allemagne'),
+(17, 'Puma', 'Hongrie'),
+(18, 'Kipsta', 'Londres'),
+(19, 'Under Armour', 'USA'),
+(20, 'Valarmorghulis', 'Polognes'),
+(21, 'Jordan', 'USA'),
+(22, 'Dior', 'France');
 
 -- --------------------------------------------------------
 
@@ -63,11 +66,17 @@ CREATE TABLE `produit` (
 --
 
 INSERT INTO `produit` (`id`, `name`, `quantité`, `price`, `id_fournisseur`) VALUES
-(6, 'RTX 4090', 17, 150, 7),
-(7, 'Ecran 24\" 165Hz', 90, 250, 7),
-(8, 'Casque', 86, 100, 7),
-(9, 'Rayen', 12, 8, 8),
-(10, 'Zizi', 7, 50, 9);
+(20, 'Chaussettes', 531, 7, 15),
+(21, 'Jogging Tech Fleece', 53, 110, 15),
+(22, 'Maillot PSG Domicile', 849, 99, 21),
+(23, 'Crampons', 9983, 12, 18),
+(24, 'Chasuble', 874, 5, 17),
+(25, 'Casquette Valar', 51, 69, 20),
+(26, 'Doudoune Maison Valar', 14, 250, 20),
+(27, 'Maillot Domicile Allemagne', 608, 89, 16),
+(28, 'Casquette', 60, 30, 19),
+(29, 'Jordan 1 Bleue / Argentée', 784, 120, 21),
+(30, 'B22 Noir / Argentée', 1, 1400, 22);
 
 -- --------------------------------------------------------
 
@@ -88,10 +97,20 @@ CREATE TABLE `produitsvendu` (
 --
 
 INSERT INTO `produitsvendu` (`id`, `id_vente`, `id_produit`, `quantité`, `total`) VALUES
-(4, 5, 6, 25, 3750),
-(5, 5, 9, 14, 112),
-(6, 6, 10, 10, 500),
-(7, 8, 10, 10, 500);
+(15, 11, 22, 3, 297),
+(16, 11, 21, 1, 110),
+(17, 11, 27, 1, 89),
+(18, 12, 20, 2, 14),
+(19, 12, 23, 2, 24),
+(20, 12, 24, 5, 25),
+(21, 12, 29, 1, 120),
+(22, 13, 25, 2, 138),
+(23, 13, 26, 1, 250),
+(24, 13, 30, 2, 2800),
+(25, 13, 28, 1, 30),
+(26, 13, 21, 1, 110),
+(27, 14, 27, 1, 89),
+(28, 15, 20, 13, 91);
 
 -- --------------------------------------------------------
 
@@ -111,9 +130,8 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`username`, `password`) VALUES
 ('admin', 'admin'),
 ('user', 'password'),
-('ae', 'ze'),
-('ae', 'ze'),
-('dq', 'zd');
+('admin', 'admin'),
+('user', 'password');
 
 -- --------------------------------------------------------
 
@@ -133,11 +151,11 @@ CREATE TABLE `vente` (
 --
 
 INSERT INTO `vente` (`id`, `client`, `total`, `date`) VALUES
-(4, 'fqsfqf', 21150, '2001-11-12'),
-(5, 'Dodou', 3862, '2004-05-31'),
-(6, 'Moi', 500, '2003-04-15'),
-(7, 'Moi', 0, '2035-11-15'),
-(8, 'Moi', 500, '2004-05-31');
+(11, 'Dodou', 496, '2024-04-14'),
+(12, 'Nicolas', 183, '2024-03-15'),
+(13, 'Rayen', 3328, '2024-05-05'),
+(14, 'Rayen', 89, '2023-12-12'),
+(15, 'Marcel', 91, '2024-05-07');
 
 --
 -- Index pour les tables déchargées
@@ -178,25 +196,25 @@ ALTER TABLE `vente`
 -- AUTO_INCREMENT pour la table `fournisseur`
 --
 ALTER TABLE `fournisseur`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT pour la table `produit`
 --
 ALTER TABLE `produit`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT pour la table `produitsvendu`
 --
 ALTER TABLE `produitsvendu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT pour la table `vente`
 --
 ALTER TABLE `vente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- Contraintes pour les tables déchargées
