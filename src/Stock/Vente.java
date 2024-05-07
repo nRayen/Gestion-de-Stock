@@ -1,6 +1,8 @@
 package Stock;
 
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Vente {
@@ -17,11 +19,11 @@ public class Vente {
         this.date = date;
     }
 
-    public Vente(int id, String client, float total, String date) { // Constructeur pour les rapports
+    public Vente(int id, String client, float total, Date date) { // Constructeur pour les rapports
         this.id = id;
         this.clientName = client;
         this.total = total;
-        this.date = date;
+        this.date = createStringDate(date);
     }
 
     public int getId() {
@@ -54,5 +56,22 @@ public class Vente {
 
     public void setDate(String value) {
         this.date = value;
+    }
+
+    public List<ProduitVendu> getProduits() {
+        return this.produits;
+    }
+
+    public Date createSQLDate(String date) {
+        String[] n = date.split("/");
+        List<String> list = Arrays.asList(n).reversed();
+        String SQLDate = String.join("-", list);
+        return java.sql.Date.valueOf(SQLDate);
+    }
+
+    public String createStringDate(Date date) {
+        String[] n = date.toString().split("-");
+        List<String> list = Arrays.asList(n).reversed();
+        return String.join("/", list);
     }
 }

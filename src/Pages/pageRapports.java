@@ -5,6 +5,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -54,11 +55,42 @@ public class pageRapports extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 String dateDébut = startInput.getText();
                 String dateFin = endInput.getText();
+                if (isDateValid(dateDébut) == false || isDateValid(dateFin) == false) {
+                    JOptionPane.showMessageDialog(null, "Date invalide, format 'dd/MM/yyyy");
+                }
                 Rapport rapport = new Rapport(dateDébut, dateFin);
+                // Rapport temp
+                // Rapport rapport = new Rapport("01/01/2002", "01/01/2005");
                 rDAO.createRapport(rapport);
             }
         });
         buttonArea.add(bouton);
+    }
+
+    private boolean isDateValid(String date) {
+        if (date.length() != 10) {
+            return false;
+        }
+        String[] liste = date.split("/");
+        if (Integer.parseInt(liste[1]) < 0 || Integer.parseInt(liste[1]) > 12) {
+            return false;
+        }
+        int maxDay = 31;
+
+        if (Integer.parseInt(liste[1]) == 2) {
+            maxDay = 29;
+        } else if (Integer.parseInt(liste[1]) % 2 == 0) {
+            maxDay = 29;
+        }
+
+        if (Integer.parseInt(liste[0]) < 0 || Integer.parseInt(liste[0]) > maxDay) {
+            return false;
+        }
+        if (Integer.parseInt(liste[2]) < 0) {
+            return false;
+        }
+
+        return true;
     }
 
 }

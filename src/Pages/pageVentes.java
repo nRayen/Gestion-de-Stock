@@ -278,7 +278,7 @@ public class pageVentes extends JPanel {
         String name = clientInput.getText();
         String date = dateInput.getText();
         if (!isDateValid(date)) {
-            JOptionPane.showMessageDialog(null, "La date n'est pas valide");
+            JOptionPane.showMessageDialog(null, "La date n'est pas valide, format 'dd/MM/yyyy");
             return;
         }
 
@@ -307,6 +307,9 @@ public class pageVentes extends JPanel {
     }
 
     private boolean isDateValid(String date) {
+        if (date.length() != 10) {
+            return false;
+        }
         String[] liste = date.split("/");
         if (Integer.parseInt(liste[1]) < 0 || Integer.parseInt(liste[1]) > 12) {
             return false;
