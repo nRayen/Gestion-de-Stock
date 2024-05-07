@@ -1,5 +1,6 @@
 package DataAccessObject;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -149,26 +150,22 @@ public class RapportDAO {
 
             for (Vente v : ventes) {
                 writer.write("\n ◢ Vente à " + v.getClientName() + " le " + v.getDate());
-                writer.write("\n ⊢   ------- Prix : " + v.getTotal());
+                writer.write("\n ⊢   ------- Prix total : " + v.getTotal() + "€");
                 writer.write("\n ⨽   ------- ◢Liste des produits");
 
                 ProduitVendu pV;
                 for (Iterator<ProduitVendu> it = v.getProduits().iterator(); it.hasNext();) {
                     pV = it.next();
-                    // ... work with movie
                     writer.write("\n               ⊢  ---- " + pV.getQuantité() + "x "
                             + pDao.get(pV.getId_produit()).getName() + " = " + pV.getTotal() + "€");
-                    if (!it.hasNext()) { // the last element
-                        writer.write("\n               ⨽  ---- " + pV.getQuantité() + "x "
-                                + pDao.get(pV.getId_produit()).getName() + " = " + pV.getTotal() + "€");
-
-                    }
                 }
 
                 writer.write("\n");
             }
 
             writer.close();
+            Desktop desktop = Desktop.getDesktop();
+            desktop.open(rapportTxt);
         } catch (IOException e) {
             // TODO: handle exception
             e.printStackTrace();

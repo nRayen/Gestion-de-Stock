@@ -156,6 +156,9 @@ public class pageFournisseurs extends JPanel {
     private void addFournisseur() {
         String name = nameInput.getText();
         String country = countryInput.getText();
+        if (name == "" || country == "") {
+            return;
+        }
         Fournisseur fournisseur = new Fournisseur(name, country);
         fDAO.save(fournisseur);
         Object[] f = { fournisseur.getId(), fournisseur.getName(), fournisseur.getCountry() };

@@ -215,6 +215,9 @@ public class pageVentes extends JPanel {
         Produit produit = (Produit) produitSelector.getSelectedItem();
         int id_produit = produit.getId();
         int quantité = Integer.parseInt(quantitéInput.getText());
+        if (quantitéInput == null) {
+            return;
+        }
         // Vérifier que quantité est positif
         if (quantité <= 0) {
             JOptionPane.showMessageDialog(null, "La quantité ne peut pas être nulle ou négative");
@@ -293,6 +296,8 @@ public class pageVentes extends JPanel {
             pV.setId_vente(vente.getId());
             pvDao.save(pV);
         }
+
+        // clearAll();
     }
 
     private boolean isAnyRowSelected() {
@@ -338,6 +343,14 @@ public class pageVentes extends JPanel {
     public void updatePSelector() {
         produitSelector
                 .setModel(new DefaultComboBoxModel<>(pDao.getAll().toArray(new Produit[pDao.getAll().size()])));
+    }
+
+    private void clearAll() {
+        listePanier.clear();
+        quantitéInput.setText("");
+        tableModel.setRowCount(0);
+        clientInput.setText("");
+        dateInput.setText("");
     }
 
 }

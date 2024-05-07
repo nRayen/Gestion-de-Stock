@@ -57,10 +57,9 @@ public class pageRapports extends JPanel {
                 String dateFin = endInput.getText();
                 if (isDateValid(dateDébut) == false || isDateValid(dateFin) == false) {
                     JOptionPane.showMessageDialog(null, "Date invalide, format 'dd/MM/yyyy");
+                    return;
                 }
                 Rapport rapport = new Rapport(dateDébut, dateFin);
-                // Rapport temp
-                // Rapport rapport = new Rapport("01/01/2002", "01/01/2005");
                 rDAO.createRapport(rapport);
             }
         });

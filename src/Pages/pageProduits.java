@@ -100,7 +100,7 @@ public class pageProduits extends JPanel {
         for (Produit produit : data) {
             int id = produit.getId();
             String name = produit.getName();
-            Float price = produit.getPrice();
+            String price = produit.getPrice() + "€";
             int quantité = produit.getQuantité();
             int idFournisseur = produit.getIDFournisseur();
             Object[] p = { id, name, price, quantité, fDao.get(idFournisseur).getName() };
@@ -207,10 +207,15 @@ public class pageProduits extends JPanel {
         Object[] p = {
                 produit.getId(),
                 produit.getName(),
-                produit.getPrice(),
+                produit.getPrice() + "€",
                 produit.getQuantité(),
                 produit.getIDFournisseur(),
         };
+        for (var each : p) {
+            if (each == null) {
+                return;
+            }
+        }
         p[4] = fDao.get(produit.getIDFournisseur()).getName();
         tableModel.addRow(p);
         clearInputs();
