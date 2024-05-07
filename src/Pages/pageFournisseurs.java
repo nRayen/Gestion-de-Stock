@@ -2,7 +2,6 @@ package Pages;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -11,19 +10,18 @@ import java.awt.event.ActionListener;
 
 import java.util.List;
 
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
+import Components.InputField;
+import Components.InputLabel;
 import Components.StyledButton;
 import Components.pageTitle;
 import DataAccessObject.FournisseurDAO;
@@ -31,14 +29,12 @@ import Stock.Fournisseur;
 
 public class pageFournisseurs extends JPanel {
     FournisseurDAO fDAO = new FournisseurDAO();
-    JTextField nameInput = new JTextField();
-    JTextField countryInput = new JTextField();
+    InputField nameInput = new InputField();
+    InputField countryInput = new InputField();
     JTable table;
     DefaultTableModel tableModel;
 
     public pageFournisseurs() {
-
-        fDAO.fetchData();
 
         // Layout de base
         setLayout(new BorderLayout());
@@ -53,19 +49,19 @@ public class pageFournisseurs extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.weightx = 0.5;
-        gbc.weighty = 0.5;
+        gbc.weightx = 0.2;
+        gbc.weighty = 0.2;
         gbc.fill = GridBagConstraints.BOTH;
 
         JPanel fInfo = new JPanel();
-        fInfo.setLayout(new GridLayout(2, 1, 20, 20));
+        fInfo.setLayout(new GridLayout(2, 1));
         content.add(fInfo, gbc);
 
         /////////////////////////////////////////////////////////////////////// Liste à
         /////////////////////////////////////////////////////////////////////// droite
 
         // Création du tableau
-        String columns[] = { "ID", "Name", "Country" };
+        String columns[] = { "ID", "Nom", "Pays" };
         tableModel = new DefaultTableModel(columns, 0) {
             public boolean isCellEditable(int row, int column) {
                 return false; // Toujours retourner faux pour savoir si la cellule est modifiable
@@ -95,6 +91,8 @@ public class pageFournisseurs extends JPanel {
         }
 
         gbc.gridx = 1;
+        gbc.weightx = 0.8;
+        gbc.weighty = 0.8;
         content.add(fList, gbc);
 
         /////////////////////////////////////////////////////////////////// Panel Info à
@@ -105,17 +103,8 @@ public class pageFournisseurs extends JPanel {
 
         inputArea.setLayout(new GridLayout(2, 1, 100, 50));
 
-        JLabel nameLabel = new JLabel("Nom");
-        nameLabel.setFont(new Font("Montserrat", Font.PLAIN, 25));
-        nameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-        JLabel countryLabel = new JLabel("Localisation");
-        countryLabel.setFont(new Font("Montserrat", Font.PLAIN, 25));
-        countryLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-
-        nameInput.setFont(new Font("Montserrat", Font.PLAIN, 25));
-        nameInput.setColumns(10);
-        countryInput.setFont(new Font("Montserrat", Font.PLAIN, 25));
-        countryInput.setColumns(10);
+        InputLabel nameLabel = new InputLabel("Nom");
+        InputLabel countryLabel = new InputLabel("Localisation");
 
         inputArea.add(nameLabel);
         inputArea.add(nameInput);
@@ -125,6 +114,7 @@ public class pageFournisseurs extends JPanel {
         // Button Area
 
         JPanel buttonArea = new JPanel();
+        buttonArea.setBorder(new EmptyBorder(50, 0, 50, 0));
         fInfo.add(buttonArea);
 
         StyledButton addButton = new StyledButton("Ajouter");
@@ -171,8 +161,6 @@ public class pageFournisseurs extends JPanel {
         Object[] f = { fournisseur.getId(), fournisseur.getName(), fournisseur.getCountry() };
         tableModel.addRow(f);
         clearInputs();
-
-        // Modfiier dans la BDD
     }
 
     private void deleteFournisseur() {

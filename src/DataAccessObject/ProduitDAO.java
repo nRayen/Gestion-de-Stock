@@ -12,94 +12,99 @@ import java.util.Objects;
 
 import javax.swing.JOptionPane;
 
-import Stock.Fournisseur;
+import Stock.Produit;
 
-public class FournisseurDAO implements Dao<Fournisseur> {
-
-    public FournisseurDAO() {
+public class ProduitDAO implements Dao<Produit> {
+    public ProduitDAO() {
     }
 
-    public static List<Fournisseur> fournisseurs = new ArrayList<>();
+    public static List<Produit> listeProduits = new ArrayList<>();
 
     @Override
-    public Fournisseur get(int id) {
+    public Produit get(int id) {
         int index = 0;
-        for (Fournisseur f : fournisseurs) {
-            if (f.getId() == id) {
-                index = fournisseurs.indexOf(f);
+        for (Produit p : listeProduits) {
+            if (p.getId() == id) {
+                index = listeProduits.indexOf(p);
             }
         }
-        return fournisseurs.get((int) index);
-
+        return listeProduits.get((int) index);
     }
 
     @Override
-    public List<Fournisseur> getAll() {
-        return fournisseurs;
+    public List<Produit> getAll() {
+        return listeProduits;
     }
 
     @Override
-    public void save(Fournisseur fournisseur) {
+    public void save(Produit produit) {
 
         try {
             // Connexion à la base de données
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/stock", "root", "");
 
             // Préparation de la requête SQL
-            String query = "INSERT INTO fournisseur (name,country) VALUES (?, ?)";
+            String query = "INSERT INTO produit (name,price,quantité,id_fournisseur) VALUES (?, ?, ?, ?)";
             PreparedStatement pstmt = con.prepareStatement(query);
 
             // Remplissage des paramètres de la requête SQL
-            pstmt.setString(1, fournisseur.getName());
-            pstmt.setString(2, fournisseur.getCountry());
+            pstmt.setString(1, produit.getName());
+            pstmt.setFloat(2, produit.getPrice());
+            pstmt.setInt(3, produit.getQuantité());
+            pstmt.setInt(4, produit.getIDFournisseur());
 
             // Exécution de la requête SQL
             pstmt.executeUpdate();
             pstmt.close();
 
             // Récupérer ID attribué
-            query = "SELECT id FROM fournisseur WHERE name = ? AND country = ?";
+            query = "SELECT id FROM produit WHERE name = ? AND quantité = ? AND id_fournisseur = ?";
             PreparedStatement pstmt2 = con.prepareStatement(query);
-            pstmt2.setString(1, fournisseur.getName());
-            pstmt2.setString(2, fournisseur.getCountry());
+            pstmt2.setString(1, produit.getName());
+            pstmt2.setInt(2, produit.getQuantité());
+            pstmt2.setInt(3, produit.getIDFournisseur());
+            System.err.println(produit.getPrice());
             ResultSet rs2 = pstmt2.executeQuery();
 
             List<Integer> possibleIDs = new ArrayList<>();
             int id;
             while (rs2.next()) {
                 possibleIDs.add(rs2.getInt("id"));
+                System.out.println(rs2.getInt("id"));
             }
             id = possibleIDs.reversed().get(0);
-            fournisseur.setId(id);
+            produit.setId(id);
 
             // Fermeture de la connexion et du PreparedStatement
             pstmt2.close();
             con.close();
 
             // Affichage d'un message de succès
-            JOptionPane.showMessageDialog(null, "Le fournisseur à été ajouté avec succès");
+            JOptionPane.showMessageDialog(null, "Le produit à été ajouté avec succès");
         } catch (SQLException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Echec : " + ex.getMessage(), "Erreur", 0);
         }
 
-        fournisseurs.add(fournisseur);
+        listeProduits.add(produit);
     }
 
     @Override
-    public void update(Fournisseur fournisseur, String[] params) {
+    public void update(Produit produit, String[] params) {
         try {
             // Connexion à la base de données
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/stock", "root", "");
 
             // Préparation de la requête SQL
-            String query = "UPDATE `fournisseur` SET name = (?), country = (?) WHERE id = (?)";
+            String query = "UPDATE `produit` SET name = (?), price = (?), quantité = (?), id_fournisseur = (?) WHERE id = (?)";
             PreparedStatement pstmt = con.prepareStatement(query);
 
             // Remplissage des paramètres de la requête SQL
-            pstmt.setString(1, params[0]);
-            pstmt.setString(2, params[1]);
-            pstmt.setInt(3, fournisseur.getId());
+            pstmt.setString(1, params[0]); // name
+            pstmt.setFloat(2, Float.parseFloat(params[1] + "f")); // price
+            pstmt.setInt(3, Integer.parseInt(params[2])); // quantité
+            pstmt.setInt(4, Integer.parseInt(params[3])); // idFournisseur
+            pstmt.setInt(5, produit.getId());
 
             // Exécution de la requête SQL
             pstmt.executeUpdate();
@@ -109,7 +114,7 @@ public class FournisseurDAO implements Dao<Fournisseur> {
             con.close();
 
             // Affichage d'un message de succès
-            JOptionPane.showMessageDialog(null, "Fournisseur mis à jour avec succès!");
+            JOptionPane.showMessageDialog(null, "Produit mis à jour avec succès!");
         } catch (
 
         SQLException ex) {
@@ -117,22 +122,24 @@ public class FournisseurDAO implements Dao<Fournisseur> {
             JOptionPane.showMessageDialog(null, "Erreur lors de la modification des informations: " + ex.getMessage());
         }
 
-        fournisseur.setName(Objects.requireNonNull(params[0], "Name cannot be null"));
-        fournisseur.setCountry(Objects.requireNonNull(params[1], "Country cannot be null"));
-
+        // Mise à jour des données
+        produit.setName(Objects.requireNonNull(params[0], "Name cannot be null"));
+        produit.setPrice(Objects.requireNonNull(Float.parseFloat(params[1] + "f"), "Price cannot be null"));
+        produit.setQuantité(Objects.requireNonNull(Integer.parseInt(params[2]), "Quantité cannot be null"));
+        produit.setIDFournisseur(Objects.requireNonNull(Integer.parseInt(params[3]), "idFournisseur cannot be null"));
     }
 
     @Override
-    public void delete(Fournisseur fournisseur) {
+    public void delete(Produit produit) {
         try {
             // Connexion à la base de données
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/stock", "root", "");
 
             // Préparation de la requête SQL
-            String query = "DELETE from `fournisseur` WHERE `id` = (?)";
+            String query = "DELETE from `produit` WHERE `id` = (?)";
             PreparedStatement pstmt = con.prepareStatement(query);
 
-            int id = fournisseur.getId();
+            int id = produit.getId();
 
             // Remplissage des paramètres de la requête SQL
             pstmt.setInt(1, id);
@@ -145,24 +152,23 @@ public class FournisseurDAO implements Dao<Fournisseur> {
             con.close();
 
             // Affichage d'un message de succès
-            JOptionPane.showMessageDialog(null, "Fournisseur avec l'id " + id + " à été supprimé avec succès!");
+            JOptionPane.showMessageDialog(null, "Produit avec l'id " + id + " à été supprimé avec succès!");
         } catch (SQLException ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Erreur lors de la suppression du fournisseur: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Erreur lors de la suppression du produit: " + ex.getMessage());
         }
 
-        fournisseurs.remove(fournisseur);
+        listeProduits.remove(produit);
     }
 
     public static void fetchData() {
         try {
-            fournisseurs.clear();
-
             // Connexion à la base de données
+            listeProduits.clear();
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/stock", "root", "");
 
             // Préparation de la requête SQL
-            String query = "SELECT * FROM fournisseur";
+            String query = "SELECT * FROM produit";
 
             Statement stmt = con.prepareStatement(query);
 
@@ -173,11 +179,13 @@ public class FournisseurDAO implements Dao<Fournisseur> {
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
-                String country = rs.getString("country");
+                float price = rs.getFloat("price");
+                int quantité = rs.getInt("quantité");
+                int idFournisseur = rs.getInt("id_fournisseur");
 
-                Fournisseur f = new Fournisseur(name, country);
-                f.setId(id);
-                fournisseurs.add(f);
+                Produit p = new Produit(name, price, quantité, idFournisseur);
+                p.id = id;
+                listeProduits.add(p);
             }
 
             // Fermeture de la connexion et du Statement
@@ -188,4 +196,5 @@ public class FournisseurDAO implements Dao<Fournisseur> {
             JOptionPane.showMessageDialog(null, "Erreur lors de l'ajout de l'utilisateur: " + ex.getMessage());
         }
     }
+
 }

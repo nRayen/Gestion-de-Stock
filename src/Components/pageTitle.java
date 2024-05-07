@@ -23,4 +23,11 @@ public class pageTitle extends JLabel {
         setBackground(new Color(221, 230, 237));
         setOpaque(true);
     }
+
+    public void reverseColors() {
+        setForeground(new Color(221, 230, 237));
+        setBackground(new Color(61, 131, 197));
+
+        setBorder(new MatteBorder(0, 0, 2, 0, new Color(221, 230, 237)));
+    }
 }

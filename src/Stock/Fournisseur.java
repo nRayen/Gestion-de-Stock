@@ -6,27 +6,10 @@ public class Fournisseur {
     private String name;
     private String country;
 
-    // private static ArrayList<Fournisseur> listeFournisseurs = new
-    // ArrayList<Fournisseur>();
-
     public Fournisseur(String name, String country) {
         this.name = name;
         this.country = country;
     }
-
-    // public void addProduit(Produit p) {
-    // listeProduits.add(p);
-    // }
-
-    // public static ArrayList<Fournisseur> getFournisseurs() {
-    // return listeFournisseurs;
-    // }
-    // public static String[] getFournisseursNames() {
-    // String[] names;
-    // for (Fournisseur fournisseur : listeFournisseurs) {
-    // names.pus
-    // }
-    // }
 
     // Getters
     public int getId() {
