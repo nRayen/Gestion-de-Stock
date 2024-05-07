@@ -19,7 +19,7 @@ public class Interface extends JFrame {
         fetchAllData(); // Récupérer toute les données de la BDD
 
         // Paramètres de l'application
-        setTitle("Gestion des Stocks");
+        setTitle("Gestion des Stocks boutique pre^t à porter");
         setSize(1080, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -34,8 +34,8 @@ public class Interface extends JFrame {
         // Ajout des Pages au TabbedPane
         pageProduits pageProduits = new pageProduits();
         pageVentes pageVentes = new pageVentes();
-        tabbedPane.addTab("Produits", pageProduits);
         tabbedPane.addTab("Fournisseurs", new pageFournisseurs());
+        tabbedPane.addTab("Produits", pageProduits);
         tabbedPane.addTab("Ventes", pageVentes);
         tabbedPane.addTab("Rapports", new pageRapports());
         tabbedPane.addTab("Quitter", pageExit);
